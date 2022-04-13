@@ -12,10 +12,7 @@ export default function Home() {
         return (
           <MediaCard
             key={index}
-            title={raffle.name}
-            description={raffle.description}
-            raffleDate={raffle.raffleDate}
-            ticketPrice={raffle.ticketPrice}
+            raffleData={raffle}
           />
         )        
       })}
