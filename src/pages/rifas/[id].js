@@ -1,7 +1,7 @@
 import { Container, Typography, Grid, ToggleButton, Box, Card, CardContent, Stack, Button } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { raffles } from '../../assets/raffle'
 import { IconAndType } from '../../components/commons/IconAndType';
 import { RaffleButton } from '../../components/raffles/RaffleButton';
@@ -10,12 +10,18 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import { currencyBRLMask } from '../../helpers/utils';
+import { Context } from '../../contexts/Context';
+import FormDialog from '../../components/commons/UserForm/UserForm';
 
 
 const Raffle = () => {
   const router = useRouter();
   const { id } = router.query;
   const [selectedNumbers, setSelectedNumbers] = useState([]);
+  const [openUserForm, setOpenUserForm] = useState(false);
+  const {
+    saveItem,
+  } = useContext(Context);
 
   const thisRaffle = raffles.filter(raffle => raffle.id === id)
 
@@ -37,11 +43,17 @@ const Raffle = () => {
     }
   }
 
+  const handleBuy = () => {
+    saveItem({ id, selectedNumbers });
+    setOpenUserForm(true)
+  }
+
   return (
     <>
       <Head>
         <title>{thisRaffle[0]?.name}</title>
       </Head>
+      {openUserForm && <FormDialog open={openUserForm} setOpen={setOpenUserForm} />}
       <Container>
         <Typography variant='h1'>
           {thisRaffle[0]?.name}
@@ -86,7 +98,7 @@ const Raffle = () => {
         <Stack direction='row'>
           <Typography>{`${selectedNumbers.length} cota(s) selecionada(s)`}</Typography>
           <Typography sx={{ marginLeft: 'auto' }}>{`${currencyBRLMask(selectedNumbers.length * thisRaffle[0]?.ticketPrice)}`}</Typography>
-          <Button variant='contained'>Comprar</Button>
+          <Button variant='contained' onClick={handleBuy}>Comprar</Button>
         </Stack>
 
         <Grid container spacing={1}>

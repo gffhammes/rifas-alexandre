@@ -6,24 +6,23 @@ const ContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
   const saveItem = (item) => {
-    const found = cartItems.some((e) => e.id === item.id);
 
-    if (!found) {
-      const newItem = { id: item.id, qty: "1" };
-      setCartItems([...cartItems, newItem]);
-    } else {
-      const newCartItems = cartItems.map((cartItem) => {
-        if (cartItem.id === item.id) {
-          cartItem.qty = parseInt(cartItem.qty) + 1;
-        }
-      });
-      setCartItems([...cartItems]);
-    }
+    console.log(item)
+
+    // const found = cartItems.some((e) => e.id === item.id);
+
+    // if (!found) {
+    //   const newItem = { id: item.id, qty: item.qty };
+    //   setCartItems([...cartItems, newItem]);
+    // } else {
+    //   const newCartItems = cartItems.map((cartItem) => {
+    //     if (cartItem.id === item.id) {
+    //       cartItem.qty = parseInt(cartItem.qty) + 1;
+    //     }
+    //   });
+    //   setCartItems([...cartItems]);
+    // }
   };
-
-  const test = () => {
-    console.log('hey')
-  }
 
   const removeItem = (item) => {
     const index = cartItems.indexOf(item);
@@ -56,7 +55,6 @@ const ContextProvider = ({ children }) => {
         clearCart,
         cartOpen,
         handleCartClick,
-        test,
       }}
     >
       {children}

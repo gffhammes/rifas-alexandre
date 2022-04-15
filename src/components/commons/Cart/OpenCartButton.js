@@ -11,13 +11,12 @@ export const OpenCartButton = () => {
     clearCart,
     cartOpen,
     handleCartClick,
-    test
   } = useContext(Context);
 
   return (
     <Box sx={{ position: 'fixed', bottom: 0, right: 0, margin: '1rem' }}>
       <Tooltip title="Ver carrinho" placement="left">
-        <Fab color="primary" aria-label="add" component={Button} onClick={() => test()} >
+        <Fab color="primary" aria-label="add" component={Button}  >
           <ShoppingCartIcon />
         </Fab>
       </Tooltip>

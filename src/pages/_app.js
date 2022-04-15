@@ -6,7 +6,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <ContextProvider>
       <Component {...pageProps} />    
-      <OpenCartButton />
+      {/* <OpenCartButton /> */}
     </ContextProvider>
   )
 }
