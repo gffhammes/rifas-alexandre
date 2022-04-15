@@ -11,10 +11,12 @@ import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import { Box, Stack } from '@mui/material';
 import { IconAndType } from './commons/IconAndType';
+import { currencyBRLMask } from '../helpers/utils';
 
 export default function MediaCard({ raffleData }) {
   const {
     id,
+    image,
     name,
     description,
     raffleDate,
@@ -29,7 +31,7 @@ export default function MediaCard({ raffleData }) {
     <Card sx={{ maxWidth: 345 }}>
       <Box sx={{ height: 300, width: '100%', position: 'relative' }}>
         <Image
-          src='/images/sorteio1.jpg'
+          src={`/images/${image}`}
           layout='fill'
           objectFit='contain'
           alt={name}
@@ -48,7 +50,7 @@ export default function MediaCard({ raffleData }) {
               {raffleDate.toLocaleString('pt-BR')}
             </IconAndType>
             <IconAndType icon={PaidOutlinedIcon}>
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ticketPrice)}
+              {currencyBRLMask(ticketPrice)}
             </IconAndType>
             <IconAndType icon={CheckBoxOutlinedIcon}>
               {`${availableTickets}/${totalTickets} cotas disponíveis`}

@@ -1,9 +1,16 @@
-import { Container, Typography, Grid, ToggleButton } from '@mui/material';
+import { Container, Typography, Grid, ToggleButton, Box, Card, CardContent, Stack, Button } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
 import { raffles } from '../../assets/raffle'
+import { IconAndType } from '../../components/commons/IconAndType';
 import { RaffleButton } from '../../components/raffles/RaffleButton';
+import Image from 'next/image';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import { currencyBRLMask } from '../../helpers/utils';
+
 
 const Raffle = () => {
   const router = useRouter();
@@ -23,18 +30,12 @@ const Raffle = () => {
   })
 
   const handleNumberClick = (number) => {
-    console.log(`start`)
     if (selectedNumbers.includes(number)) {
       setSelectedNumbers(current => current.filter(selectedNumber => selectedNumber !== number));
     } else {
       setSelectedNumbers(current => [...current, number]);
     }
-    console.log(`finish`)
   }
-
-  // useEffect(() => {
-  //   console.log(selectedNumbers)
-  // }, [selectedNumbers])
 
   return (
     <>
@@ -45,6 +46,48 @@ const Raffle = () => {
         <Typography variant='h1'>
           {thisRaffle[0]?.name}
         </Typography>
+
+        <Box>
+          <Card sx={{ height: 345 }}>
+            <Stack direction='row' sx={{ height: '100%' }}>
+              <Box sx={{ height: '100%', width: 700, position: 'relative' }}>
+                <Image
+                  src={`/images/${thisRaffle[0]?.image}`}
+                  layout='fill'
+                  objectFit='contain'
+                  alt={thisRaffle[0]?.name}
+                />
+              </Box>
+              <CardContent>
+                <Stack spacing={2}>
+                  <Typography variant="h5">
+                    {thisRaffle[0]?.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {thisRaffle[0]?.description}
+                  </Typography>
+                  <Stack spacing={1.5}>          
+                    <IconAndType icon={CalendarTodayIcon}>
+                      {thisRaffle[0]?.raffleDate.toLocaleString('pt-BR')}
+                    </IconAndType>
+                    <IconAndType icon={PaidOutlinedIcon}>
+                      {currencyBRLMask(thisRaffle[0]?.ticketPrice)}
+                    </IconAndType>
+                    <IconAndType icon={CheckBoxOutlinedIcon}>
+                      {`${thisRaffle[0]?.availableTickets}/${thisRaffle[0]?.totalTickets} cotas disponíveis`}
+                    </IconAndType>
+                  </Stack>
+                </Stack>
+              </CardContent>
+            </Stack>
+          </Card>
+        </Box>
+
+        <Stack direction='row'>
+          <Typography>{`${selectedNumbers.length} cota(s) selecionada(s)`}</Typography>
+          <Typography sx={{ marginLeft: 'auto' }}>{`${currencyBRLMask(selectedNumbers.length * thisRaffle[0]?.ticketPrice)}`}</Typography>
+          <Button variant='contained'>Comprar</Button>
+        </Stack>
 
         <Grid container spacing={1}>
           {thisRaffle[0]?.raffles.map((raffle) => {

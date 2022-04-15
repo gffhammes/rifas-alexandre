@@ -1,6 +1,7 @@
 export const raffles = [
   {
     id:'000001',
+    image: 'sorteio1.jpg',
     name: 'Kit de churrasco',
     prize: 'Kit churrasco',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt a orci et viverra. Donec euismod velit eget elementum condimentum. Cras mollis sem et dapibus convallis. Cras eget nisl bibendum nulla accumsan faucibus.',
