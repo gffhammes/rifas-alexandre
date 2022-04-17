@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id      String @id @default(cuid())
+  name    String
+  email   String
+  phone   Int
+}
+
+model Raffle {
+  id                String    @id @default(cuid())
+  image             String
+  name              String
+  prize             String
+  description       String
+  ticketPrice       Float
+  raffleDate        DateTime
+}
+
+model Quotas {
+  id        String  @id @default(cuid())
+  number    Int
+  raffleId  String
+  status    String
+  ownerId   String
+}

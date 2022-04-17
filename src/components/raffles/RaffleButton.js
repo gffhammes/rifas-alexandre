@@ -1,20 +1,20 @@
 import { ToggleButton } from '@mui/material'
 import React, { useState } from 'react'
 
-export const RaffleButton = ({ raffle, selected, setSelected }) => {
+export const RaffleButton = ({ quota, selected, setSelected }) => {
   return (
     <ToggleButton
-      value={raffle.id}
+      value={quota.number}
       selected={selected}
-      disabled={raffle.status !== 'available'}
+      disabled={quota.status !== 'available'}
       onChange={setSelected}
       sx={{
         width: '100%',
-        backgroundColor: raffle.status === 'available' ? 'white' : 'transparent'
+        backgroundColor: quota.status === 'available' ? 'white' : 'transparent'
       }}
       color="primary"
     >
-      {raffle.id}
+      {quota.number}
     </ToggleButton>
   )
 }

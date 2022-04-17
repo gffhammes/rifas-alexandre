@@ -7,8 +7,6 @@ const ContextProvider = ({ children }) => {
 
   const saveItem = (item) => {
 
-    console.log(item)
-
     // const found = cartItems.some((e) => e.id === item.id);
 
     // if (!found) {

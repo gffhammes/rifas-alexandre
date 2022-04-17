@@ -2,19 +2,50 @@ import { Container, Typography, Grid, ToggleButton, Box, Card, CardContent, Stac
 import Head from 'next/head';
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react';
-import { raffles } from '../../assets/raffle'
-import { IconAndType } from '../../components/commons/IconAndType';
-import { RaffleButton } from '../../components/raffles/RaffleButton';
+import { raffles } from '../../src/assets/raffle'
+import { IconAndType } from '../../src/components/commons/IconAndType';
+import { RaffleButton } from '../../src/components/raffles/RaffleButton';
 import Image from 'next/image';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
-import { currencyBRLMask } from '../../helpers/utils';
-import { Context } from '../../contexts/Context';
-import FormDialog from '../../components/commons/UserForm/UserForm';
+import { currencyBRLMask } from '../../src/helpers/utils';
+import { Context } from '../../src/contexts/Context';
+import FormDialog from '../../src/components/commons/UserForm/UserForm';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 
-const Raffle = () => {
+export async function getServerSideProps() {
+  const users = await prisma.user.findMany();
+  const quotas = await prisma.quotas.findMany();
+  return {
+    props: {
+      initialUsers: users,
+      initialQuotas: quotas,
+    }
+  }
+}
+
+async function saveUser(user) {
+  const response = await fetch('/api/users', {
+    method: 'POST',
+    body: JSON.stringify(user),
+  }).then((res) => console.log(res)).catch((err) => {throw new Error(err)})
+
+  return await response.json()
+}
+
+async function saveSell(userId, quotas) {
+  const response = await fetch('/api/users', {
+    method: 'POST',
+    body: JSON.stringify(user),
+  }).then((res) => console.log(res)).catch((err) => {throw new Error(err)})
+
+  return await response.json()
+}
+
+const Raffle = (props) => {
   const router = useRouter();
   const { id } = router.query;
   const [selectedNumbers, setSelectedNumbers] = useState([]);
@@ -53,7 +84,7 @@ const Raffle = () => {
       <Head>
         <title>{thisRaffle[0]?.name}</title>
       </Head>
-      {openUserForm && <FormDialog open={openUserForm} setOpen={setOpenUserForm} />}
+      {openUserForm && <FormDialog open={openUserForm} setOpen={setOpenUserForm} saveUser={saveUser} />}
       <Container>
         <Typography variant='h1'>
           {thisRaffle[0]?.name}
@@ -98,17 +129,17 @@ const Raffle = () => {
         <Stack direction='row'>
           <Typography>{`${selectedNumbers.length} cota(s) selecionada(s)`}</Typography>
           <Typography sx={{ marginLeft: 'auto' }}>{`${currencyBRLMask(selectedNumbers.length * thisRaffle[0]?.ticketPrice)}`}</Typography>
-          <Button variant='contained' onClick={handleBuy}>Comprar</Button>
+          <Button variant='contained' onClick={handleBuy} disabled={selectedNumbers.length === 0}>Comprar</Button>
         </Stack>
 
         <Grid container spacing={1}>
-          {thisRaffle[0]?.raffles.map((raffle) => {
+          {props.initialQuotas.map((quota) => {
             return (
-              <Grid item xs={1} key={raffle.id}>
+              <Grid item xs={3} sm={2} md={1} key={quota.id}>
                 <RaffleButton
-                  raffle={raffle}
-                  selected={selectedNumbers ? selectedNumbers.includes(raffle.id) : false}
-                  setSelected={() => handleNumberClick(raffle.id)}
+                  quota={quota}
+                  selected={selectedNumbers ? selectedNumbers.includes(quota.number) : false}
+                  setSelected={() => handleNumberClick(quota.number)}
                 />
               </Grid>
             )

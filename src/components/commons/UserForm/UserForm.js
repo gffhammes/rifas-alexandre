@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Input } from './Input';
 import { Form, Formik, useFormik } from 'formik';
 
-export default function FormDialog({ open, setOpen }) {
+export default function FormDialog({ open, setOpen, saveUser, ...props }) {
 
   const handleClose = () => {
     setOpen(false);
@@ -19,15 +19,18 @@ export default function FormDialog({ open, setOpen }) {
     const errors = {};
 
     if (!values.name) {
-      errors.name = 'Obrigatório'
+      errors.name = '*Obrigatório'
     }
 
     if (!values.email) {
-      errors.email = 'Obrigatório';
+      errors.email = '*Obrigatório';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
       errors.email = 'Email inválido';
     }
-
+    
+    if (!values.phone) {
+      errors.phone = '*Obrigatório';
+    }
 
     return errors;
   }
@@ -37,13 +40,15 @@ export default function FormDialog({ open, setOpen }) {
       <Dialog open={open} >
         <DialogTitle>Dados pessoais</DialogTitle>
         <Formik
-          initialValues={{ name: '', email: '', phone: undefined }}
+          initialValues={{ name: '', email: '', phone: '' }}
           validate={validate}
-          onSubmit={(values, actions) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              actions.setSubmitting(false);
-            }, 1000);
+          onSubmit={async (values, actions, e) => {
+            try {
+              await saveUser(values);
+            } catch (error) {
+              console.log(error);
+            }
+            handleClose();
           }}
         >
           {(props) => (
