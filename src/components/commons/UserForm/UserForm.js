@@ -46,7 +46,7 @@ export default function FormDialog({ open, setOpen, saveUser, ...props }) {
             try {
               await saveUser(values);
             } catch (error) {
-              console.log(error);
+              //error && console.log(error);
             }
             handleClose();
           }}

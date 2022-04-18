@@ -12,6 +12,10 @@ export default async function handle(req, res) {
       })
       res.json(user);
       break;
+    case "GET":
+      const users = await prisma.user.findMany({})
+      res.json(users);
+      break;
     default:
       res.status(405).json({ message: 'Method not allowed' })
   }

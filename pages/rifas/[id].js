@@ -36,15 +36,6 @@ async function saveUser(user) {
   return await response.json()
 }
 
-async function saveSell(userId, quotas) {
-  const response = await fetch('/api/users', {
-    method: 'POST',
-    body: JSON.stringify(user),
-  }).then((res) => console.log(res)).catch((err) => {throw new Error(err)})
-
-  return await response.json()
-}
-
 const Raffle = (props) => {
   const router = useRouter();
   const { id } = router.query;
@@ -65,6 +56,8 @@ const Raffle = (props) => {
   thisRaffle[0]?.raffles.forEach((raffle) => {
     totals[raffle.status]++;
   })
+
+  console.log(props.initialUsers)
 
   const handleNumberClick = (number) => {
     if (selectedNumbers.includes(number)) {
