@@ -9,6 +9,7 @@ import Image from 'next/image';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { Box, Stack } from '@mui/material';
 import { IconAndType } from './commons/IconAndType';
 import { currencyBRLMask } from '../helpers/utils';
@@ -22,8 +23,8 @@ export default function MediaCard({ raffleData }) {
     raffleDate,
     ticketPrice,
     availableTickets,
-    reservedTickets,
-    boughtTickets,
+    prize,
+    totalQuotas,
     totalTickets
   } = raffleData;
 
@@ -45,15 +46,18 @@ export default function MediaCard({ raffleData }) {
           <Typography variant="body2" color="text.secondary">
             {description}
           </Typography>
-          <Stack spacing={1.5}>          
+          <Stack spacing={1.5}>            
+            <IconAndType icon={EmojiEventsIcon}>
+              {prize}
+            </IconAndType>
             <IconAndType icon={CalendarTodayIcon}>
-              {raffleDate.toLocaleString('pt-BR')}
+              {new Date(raffleDate).toLocaleString('pt-BR', {  dateStyle: 'short', timeStyle: 'short' })}
             </IconAndType>
             <IconAndType icon={PaidOutlinedIcon}>
               {currencyBRLMask(ticketPrice)}
             </IconAndType>
             <IconAndType icon={CheckBoxOutlinedIcon}>
-              {`${availableTickets}/${totalTickets} cotas disponíveis`}
+              {`${totalQuotas.available}/${totalQuotas.available + totalQuotas.unavailable} cotas disponíveis`}
             </IconAndType>
           </Stack>
         </Stack>

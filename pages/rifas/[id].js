@@ -16,8 +16,9 @@ import FormDialog from '../../src/components/commons/UserForm/UserForm';
 import prisma from '../../prisma.js'
 
 export const getStaticProps = async () => {
-  const res = await prisma.user.findMany({});
-  return { props: { res } };
+  const users = await prisma.user.findMany({});
+  const quotas = await prisma.quotas.findMany({});
+  return { props: { users, quotas } };
 };
 
 export const getStaticPaths = async () => {
@@ -44,6 +45,7 @@ const Raffle = (props) => {
   const {
     saveItem,
   } = useContext(Context);
+  const { quotas } = props;
 
   const thisRaffle = raffles.filter(raffle => raffle.id === id)
 
@@ -71,7 +73,7 @@ const Raffle = (props) => {
     setOpenUserForm(true)
   }
 
-  console.log(props.res)
+  console.log(props.users)
 
   return (
     <>
@@ -127,7 +129,7 @@ const Raffle = (props) => {
         </Stack>
 
         <Grid container spacing={1}>
-          {/* {props.initialQuotas.map((quota) => {
+          {quotas.map((quota) => {
             return (
               <Grid item xs={3} sm={2} md={1} key={quota.id}>
                 <RaffleButton
@@ -137,7 +139,7 @@ const Raffle = (props) => {
                 />
               </Grid>
             )
-          })} */}
+          })}
         </Grid>        
       </Container>
     </>    

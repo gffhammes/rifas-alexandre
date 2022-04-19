@@ -10,7 +10,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// model Post {
+// model Posts {
 //   id        String     @default(cuid()) @id
 //   title     String
 //   content   String?
@@ -19,38 +19,45 @@ generator client {
 //   authorId  String?
 // }
 
-model User {
-  id            String       @default(cuid()) @id
-  name          String?
-  email         String?   @unique
+// model Users {
+  // id            String       @default(cuid()) @id
+  // name          String?
+  // email         String?   @unique
   //createdAt     DateTime  @default(now()) @map(name: "created_at")
   //updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   //posts         Post[]
-  @@map(name: "users")
+  // @@map(name: "users")
   // Note: You're occasionally using `@map`and `@@map`to map some field and model names to different column and table names in the underlying database. This is because NextAuth.js has some specialrequirements for calling things in your database a certain way.
+// }
+
+model Users {
+  id                 String      @id @default(cuid())
+  createdAt          DateTime    @default(now()) @map(name: "created_at")
+  name               String
+  email              String
+  phone              Int
+  quotas             Quotas[]
 }
 
-// model User {
-//   id      String @id @default(cuid())
-//   name    String
-//   email   String
-//   phone   Int
-// }
+model Raffles {
+  id                String      @id @default(cuid())
+  createdAt         DateTime    @default(now()) @map(name: "created_at")
+  image             String
+  name              String
+  prize             String
+  description       String
+  ticketPrice       Float
+  raffleDate        DateTime
+  quotas            Quotas[]
+}
 
-// model Raffle {
-//   id                String    @id @default(cuid())
-//   image             String
-//   name              String
-//   prize             String
-//   description       String
-//   ticketPrice       Float
-//   raffleDate        DateTime
-// }
-
-// model Quotas {
-//   id        String  @id @default(cuid())
-//   number    Int
-//   raffleId  String
-//   status    String
-//   ownerId   String
-// }
+model Quotas {
+  id                String      @id @default(cuid())
+  createdAt         DateTime    @default(now()) @map(name: "created_at")
+  number            Int
+  status            String
+  raffle            Raffles?    @relation(fields: [raffleId], references: [id])
+  raffleId          String?
+  owner             Users?      @relation(fields: [ownerId], references: [id])
+  ownerId           String?
+}
