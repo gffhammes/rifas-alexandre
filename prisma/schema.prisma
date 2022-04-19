@@ -2,35 +2,55 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = "postgres://fsmgtdxjwgcltd:0c6150fff8ad150d7316e23074596125c69ee72031cc9a3022a12c61e1016814@ec2-44-194-4-127.compute-1.amazonaws.com:5432/d4joua83eppe28"
 }
 
 generator client {
   provider = "prisma-client-js"
 }
 
+// model Post {
+//   id        String     @default(cuid()) @id
+//   title     String
+//   content   String?
+//   published Boolean @default(false)
+//   author    User?   @relation(fields: [authorId], references: [id])
+//   authorId  String?
+// }
+
 model User {
-  id      String @id @default(cuid())
-  name    String
-  email   String
-  phone   Int
+  id            String       @default(cuid()) @id
+  name          String?
+  email         String?   @unique
+  //createdAt     DateTime  @default(now()) @map(name: "created_at")
+  //updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  //posts         Post[]
+  @@map(name: "users")
+  // Note: You're occasionally using `@map`and `@@map`to map some field and model names to different column and table names in the underlying database. This is because NextAuth.js has some specialrequirements for calling things in your database a certain way.
 }
 
-model Raffle {
-  id                String    @id @default(cuid())
-  image             String
-  name              String
-  prize             String
-  description       String
-  ticketPrice       Float
-  raffleDate        DateTime
-}
+// model User {
+//   id      String @id @default(cuid())
+//   name    String
+//   email   String
+//   phone   Int
+// }
 
-model Quotas {
-  id        String  @id @default(cuid())
-  number    Int
-  raffleId  String
-  status    String
-  ownerId   String
-}
+// model Raffle {
+//   id                String    @id @default(cuid())
+//   image             String
+//   name              String
+//   prize             String
+//   description       String
+//   ticketPrice       Float
+//   raffleDate        DateTime
+// }
+
+// model Quotas {
+//   id        String  @id @default(cuid())
+//   number    Int
+//   raffleId  String
+//   status    String
+//   ownerId   String
+// }

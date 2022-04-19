@@ -12,29 +12,29 @@ import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import { currencyBRLMask } from '../../src/helpers/utils';
 import { Context } from '../../src/contexts/Context';
 import FormDialog from '../../src/components/commons/UserForm/UserForm';
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+import prisma from '../../prisma.js'
 
-export async function getServerSideProps() {
-  const users = await prisma.user.findMany();
-  const quotas = await prisma.quotas.findMany();
+export const getStaticProps = async () => {
+  const res = await prisma.user.findMany({});
+  return { props: { res } };
+};
+
+export const getStaticPaths = async () => {
   return {
-    props: {
-      initialUsers: users,
-      initialQuotas: quotas,
-    }
+      paths: [], //indicates that no page needs be created at build time
+      fallback: 'blocking' //indicates the type of fallback
   }
 }
 
-async function saveUser(user) {
-  const response = await fetch('/api/users', {
-    method: 'POST',
-    body: JSON.stringify(user),
-  }).then((res) => console.log(res)).catch((err) => {throw new Error(err)})
+// async function saveUser(user) {
+//   const response = await fetch('/api/users', {
+//     method: 'POST',
+//     body: JSON.stringify(user),
+//   }).then((res) => console.log(res)).catch((err) => {throw new Error(err)})
 
-  return await response.json()
-}
+//   return await response.json()
+// }
 
 const Raffle = (props) => {
   const router = useRouter();
@@ -57,7 +57,6 @@ const Raffle = (props) => {
     totals[raffle.status]++;
   })
 
-  console.log(props.initialUsers)
 
   const handleNumberClick = (number) => {
     if (selectedNumbers.includes(number)) {
@@ -71,6 +70,8 @@ const Raffle = (props) => {
     saveItem({ id, selectedNumbers });
     setOpenUserForm(true)
   }
+
+  console.log(props.res)
 
   return (
     <>
@@ -126,7 +127,7 @@ const Raffle = (props) => {
         </Stack>
 
         <Grid container spacing={1}>
-          {props.initialQuotas.map((quota) => {
+          {/* {props.initialQuotas.map((quota) => {
             return (
               <Grid item xs={3} sm={2} md={1} key={quota.id}>
                 <RaffleButton
@@ -136,7 +137,7 @@ const Raffle = (props) => {
                 />
               </Grid>
             )
-          })}
+          })} */}
         </Grid>        
       </Container>
     </>    
