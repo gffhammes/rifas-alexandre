@@ -14,13 +14,18 @@ import FormDialog from '../../src/components/commons/UserForm/UserForm';
 
 import prisma from '../../prisma.js'
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
   const users = JSON.stringify(await prisma.users.findMany({}));
   const quotas = JSON.parse(JSON.stringify(await prisma.quotas.findMany({})));
-  return { props: { users, quotas } };
+  const raffle = JSON.parse(JSON.stringify(await prisma.raffles.findUnique({
+    where: {
+      id: context.params.id,
+    },
+  })))
+  return { props: { users, quotas, raffle } };
 };
 
-const Raffle = ({ users, quotas, ...props }) => {
+const Raffle = ({ users, quotas, raffle, ...props }) => {
   const router = useRouter();
   const { id } = router.query;
   const [selectedNumbers, setSelectedNumbers] = useState([]);
@@ -28,8 +33,6 @@ const Raffle = ({ users, quotas, ...props }) => {
   const {
     saveItem,
   } = useContext(Context);
-
-  console.log(quotas)
 
 
   // const thisRaffle = raffles.filter(raffle => raffle.id === id)
@@ -40,35 +43,33 @@ const Raffle = ({ users, quotas, ...props }) => {
   //   bought: 0,
   // }
 
-  // thisRaffle[0]?.raffles.forEach((raffle) => {
+  // raffle.raffles.forEach((raffle) => {
   //   totals[raffle.status]++;
   // })
 
 
-  // const handleNumberClick = (number) => {
-  //   if (selectedNumbers.includes(number)) {
-  //     setSelectedNumbers(current => current.filter(selectedNumber => selectedNumber !== number));
-  //   } else {
-  //     setSelectedNumbers(current => [...current, number]);
-  //   }
-  // }
+  const handleNumberClick = (number) => {
+    if (selectedNumbers.includes(number)) {
+      setSelectedNumbers(current => current.filter(selectedNumber => selectedNumber !== number));
+    } else {
+      setSelectedNumbers(current => [...current, number]);
+    }
+  }
 
-  // const handleBuy = () => {
-  //   saveItem({ id, selectedNumbers });
-  //   setOpenUserForm(true)
-  // }
-
-  // console.log(props.users)
+  const handleBuy = () => {
+    console.log('hey')
+    // setOpenUserForm(true)
+  }
 
   return (
     <>
       <Head>
-        <title>{'ho'}</title>
+        <title>{raffle.name}</title>
       </Head>
-      {/* {openUserForm && <FormDialog open={openUserForm} setOpen={setOpenUserForm} saveUser={saveUser} />}
+      {openUserForm && <FormDialog open={openUserForm} setOpen={setOpenUserForm} saveUser={saveUser} />}
       <Container>
         <Typography variant='h1'>
-          {thisRaffle[0]?.name}
+          {raffle.name}
         </Typography>
 
         <Box>
@@ -76,29 +77,29 @@ const Raffle = ({ users, quotas, ...props }) => {
             <Stack direction='row' sx={{ height: '100%' }}>
               <Box sx={{ height: '100%', width: 700, position: 'relative' }}>
                 <Image
-                  src={`/images/${thisRaffle[0]?.image}`}
+                  src={`/images/${raffle.image}`}
                   layout='fill'
                   objectFit='contain'
-                  alt={thisRaffle[0]?.name}
+                  alt={raffle.name}
                 />
               </Box>
               <CardContent>
                 <Stack spacing={2}>
                   <Typography variant="h5">
-                    {thisRaffle[0]?.name}
+                    {raffle.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {thisRaffle[0]?.description}
+                    {raffle.description}
                   </Typography>
                   <Stack spacing={1.5}>          
                     <IconAndType icon={CalendarTodayIcon}>
-                      {thisRaffle[0]?.raffleDate.toLocaleString('pt-BR')}
+                      {new Date(raffle.raffleDate).toLocaleString('pt-BR', {  dateStyle: 'short', timeStyle: 'short' })}
                     </IconAndType>
                     <IconAndType icon={PaidOutlinedIcon}>
-                      {currencyBRLMask(thisRaffle[0]?.ticketPrice)}
+                      {currencyBRLMask(raffle.ticketPrice)}
                     </IconAndType>
                     <IconAndType icon={CheckBoxOutlinedIcon}>
-                      {`${thisRaffle[0]?.availableTickets}/${thisRaffle[0]?.totalTickets} cotas disponíveis`}
+                      {`${raffle.availableTickets || 0}/${raffle.totalTickets || 0} cotas disponíveis`}
                     </IconAndType>
                   </Stack>
                 </Stack>
@@ -109,7 +110,7 @@ const Raffle = ({ users, quotas, ...props }) => {
 
         <Stack direction='row'>
           <Typography>{`${selectedNumbers.length} cota(s) selecionada(s)`}</Typography>
-          <Typography sx={{ marginLeft: 'auto' }}>{`${currencyBRLMask(selectedNumbers.length * thisRaffle[0]?.ticketPrice)}`}</Typography>
+          <Typography sx={{ marginLeft: 'auto' }}>{`${currencyBRLMask(selectedNumbers.length * raffle.ticketPrice)}`}</Typography>
           <Button variant='contained' onClick={handleBuy} disabled={selectedNumbers.length === 0}>Comprar</Button>
         </Stack>
 
@@ -126,7 +127,7 @@ const Raffle = ({ users, quotas, ...props }) => {
             )
           })}
         </Grid>        
-      </Container> */}
+      </Container>
     </>    
   )
 }
