@@ -2,7 +2,6 @@ import { Container, Typography, Grid, ToggleButton, Box, Card, CardContent, Stac
 import Head from 'next/head';
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react';
-import { raffles } from '../../src/assets/raffle'
 import { IconAndType } from '../../src/components/commons/IconAndType';
 import { RaffleButton } from '../../src/components/raffles/RaffleButton';
 import Image from 'next/image';
@@ -15,29 +14,13 @@ import FormDialog from '../../src/components/commons/UserForm/UserForm';
 
 import prisma from '../../prisma.js'
 
-export const getStaticProps = async () => {
-  const users = await prisma.user.findMany({});
-  const quotas = await prisma.quotas.findMany({});
+export const getServerSideProps = async () => {
+  const users = JSON.stringify(await prisma.users.findMany({}));
+  const quotas = JSON.parse(JSON.stringify(await prisma.quotas.findMany({})));
   return { props: { users, quotas } };
 };
 
-export const getStaticPaths = async () => {
-  return {
-      paths: [], //indicates that no page needs be created at build time
-      fallback: 'blocking' //indicates the type of fallback
-  }
-}
-
-// async function saveUser(user) {
-//   const response = await fetch('/api/users', {
-//     method: 'POST',
-//     body: JSON.stringify(user),
-//   }).then((res) => console.log(res)).catch((err) => {throw new Error(err)})
-
-//   return await response.json()
-// }
-
-const Raffle = (props) => {
+const Raffle = ({ users, quotas, ...props }) => {
   const router = useRouter();
   const { id } = router.query;
   const [selectedNumbers, setSelectedNumbers] = useState([]);
@@ -45,42 +28,44 @@ const Raffle = (props) => {
   const {
     saveItem,
   } = useContext(Context);
-  const { quotas } = props;
 
-  const thisRaffle = raffles.filter(raffle => raffle.id === id)
-
-  const totals = {
-    available: 0,
-    reserved: 0,
-    bought: 0,
-  }
-
-  thisRaffle[0]?.raffles.forEach((raffle) => {
-    totals[raffle.status]++;
-  })
+  console.log(quotas)
 
 
-  const handleNumberClick = (number) => {
-    if (selectedNumbers.includes(number)) {
-      setSelectedNumbers(current => current.filter(selectedNumber => selectedNumber !== number));
-    } else {
-      setSelectedNumbers(current => [...current, number]);
-    }
-  }
+  // const thisRaffle = raffles.filter(raffle => raffle.id === id)
 
-  const handleBuy = () => {
-    saveItem({ id, selectedNumbers });
-    setOpenUserForm(true)
-  }
+  // const totals = {
+  //   available: 0,
+  //   reserved: 0,
+  //   bought: 0,
+  // }
 
-  console.log(props.users)
+  // thisRaffle[0]?.raffles.forEach((raffle) => {
+  //   totals[raffle.status]++;
+  // })
+
+
+  // const handleNumberClick = (number) => {
+  //   if (selectedNumbers.includes(number)) {
+  //     setSelectedNumbers(current => current.filter(selectedNumber => selectedNumber !== number));
+  //   } else {
+  //     setSelectedNumbers(current => [...current, number]);
+  //   }
+  // }
+
+  // const handleBuy = () => {
+  //   saveItem({ id, selectedNumbers });
+  //   setOpenUserForm(true)
+  // }
+
+  // console.log(props.users)
 
   return (
     <>
       <Head>
-        <title>{thisRaffle[0]?.name}</title>
+        <title>{'ho'}</title>
       </Head>
-      {openUserForm && <FormDialog open={openUserForm} setOpen={setOpenUserForm} saveUser={saveUser} />}
+      {/* {openUserForm && <FormDialog open={openUserForm} setOpen={setOpenUserForm} saveUser={saveUser} />}
       <Container>
         <Typography variant='h1'>
           {thisRaffle[0]?.name}
@@ -141,7 +126,7 @@ const Raffle = (props) => {
             )
           })}
         </Grid>        
-      </Container>
+      </Container> */}
     </>    
   )
 }

@@ -5,7 +5,7 @@ import prisma from '../prisma'
 import { raffles } from '../src/assets/raffle'
 import MediaCard from '../src/components/RaffleCard'
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const raffles = JSON.stringify(await prisma.raffles.findMany({}));
   const quotas = JSON.stringify(await prisma.quotas.findMany({}));
   return { props: { raffles, quotas } };
@@ -45,16 +45,21 @@ export default function Home(props) {
   console.log(raffles)
 
   return (
-    <Container>
-      <Typography variant='h1'>Rifas</Typography>
-      {raffles.map((raffle, index) => {
-        return (
-          <MediaCard
-            key={index}
-            raffleData={raffle}
-          />
-        )        
-      })}
-    </Container>
+    <>
+      <Head>
+        <title>Rifas</title>
+      </Head>
+      <Container>
+        <Typography variant='h1'>Rifas</Typography>
+        {raffles.map((raffle, index) => {
+          return (
+            <MediaCard
+              key={index}
+              raffleData={raffle}
+            />
+          )        
+        })}
+      </Container>
+    </>
   )
 }
