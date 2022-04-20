@@ -25,27 +25,29 @@ export const getServerSideProps = async (context) => {
   return { props: { users, quotas, raffle } };
 };
 
+async function saveUser(user) {
+  console.log(user)
+  const response = await fetch('/api/users', {
+    method: 'POST',
+    body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return await response.json;
+}
+
 const Raffle = ({ users, quotas, raffle, ...props }) => {
   const router = useRouter();
   const { id } = router.query;
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [openUserForm, setOpenUserForm] = useState(false);
-  const {
-    saveItem,
-  } = useContext(Context);
+  // const {
+  //   saveItem,
+  // } = useContext(Context);
 
-
-  // const thisRaffle = raffles.filter(raffle => raffle.id === id)
-
-  // const totals = {
-  //   available: 0,
-  //   reserved: 0,
-  //   bought: 0,
-  // }
-
-  // raffle.raffles.forEach((raffle) => {
-  //   totals[raffle.status]++;
-  // })
 
 
   const handleNumberClick = (number) => {
@@ -57,8 +59,7 @@ const Raffle = ({ users, quotas, raffle, ...props }) => {
   }
 
   const handleBuy = () => {
-    console.log('hey')
-    // setOpenUserForm(true)
+    setOpenUserForm(true)
   }
 
   return (
