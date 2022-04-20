@@ -42,6 +42,8 @@ export default function Home(props) {
 
   raffles[0] = { ...raffles[0], totalQuotas }
 
+  console.log(raffles)
+
   return (
     <Container>
       <Typography variant='h1'>Rifas</Typography>
