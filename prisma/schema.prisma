@@ -10,31 +10,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// model Posts {
-//   id        String     @default(cuid()) @id
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-//   author    User?   @relation(fields: [authorId], references: [id])
-//   authorId  String?
-// }
-
-// model Users {
-  // id            String       @default(cuid()) @id
-  // name          String?
-  // email         String?   @unique
-  //createdAt     DateTime  @default(now()) @map(name: "created_at")
-  //updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  //posts         Post[]
-  // @@map(name: "users")
-  // Note: You're occasionally using `@map`and `@@map`to map some field and model names to different column and table names in the underlying database. This is because NextAuth.js has some specialrequirements for calling things in your database a certain way.
-// }
-
 model Users {
   id                 String      @id @default(cuid())
   createdAt          DateTime    @default(now()) @map(name: "created_at")
   name               String
-  email              String
+  email              String      @unique
   phone              Int
   quotas             Quotas[]
 }

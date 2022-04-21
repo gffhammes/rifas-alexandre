@@ -9,7 +9,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Input } from './Input';
 import { Form, Formik, useFormik } from 'formik';
 
-export default function FormDialog({ open, setOpen, saveUser, ...props }) {
+export default function FormDialog({
+  open,
+  setOpen,
+  saveUser,
+  reserveQuotas,
+  raffleId,
+  selectedQuotas,
+  ...props
+}) {
 
   const handleClose = () => {
     setOpen(false);
@@ -43,11 +51,13 @@ export default function FormDialog({ open, setOpen, saveUser, ...props }) {
           initialValues={{ name: '', email: '', phone: '' }}
           validate={validate}
           onSubmit={async (values, actions, e) => {
+            let user;
             try {
-              await saveUser(values);
+              user = await saveUser(values);
             } catch (error) {
               //error && console.log(error);
             }
+            await reserveQuotas(user.id, raffleId, selectedQuotas);
             handleClose();
           }}
         >

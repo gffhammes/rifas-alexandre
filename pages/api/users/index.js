@@ -1,5 +1,5 @@
 import React from 'react'
-import prisma from '../../prisma';
+import prisma from '../../../prisma';
 
 export default async function handler(req, res) {
     switch (req.method) {
@@ -9,6 +9,10 @@ export default async function handler(req, res) {
           data: userData
         })
         res.json(savedUser)
+        break;
+      case 'GET':
+        const users = await prisma.users.findMany({})
+        res.json(users)
         break;
       default:
         res.status(405).json({ message: 'Method not allowed' })

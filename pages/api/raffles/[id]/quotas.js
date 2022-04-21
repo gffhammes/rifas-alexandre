@@ -5,6 +5,11 @@ export default async function handler(req, res) {
     const { id } = req.query;
     let quotas;
 
+    const body = JSON.parse(req.body)
+
+    console.log(body)
+    console.log(body.ownerId)
+
     switch (req.method) {
       case 'GET':
         quotas = await prisma.quotas.findMany({
@@ -17,12 +22,14 @@ export default async function handler(req, res) {
       case 'PUT':
         quotas = await prisma.quotas.updateMany({
           where: {
-            email: {
-              contains: 'prisma.io',
-            },
+           AND: [
+            { number: { in: body.numbers } },
+            { raffleId: body.raffleId },
+           ]
           },
           data: {
-            role: 'ADMIN',
+            status: 'reserved',
+            ownerId: body.ownerId,
           },
         })
         res.json(quotas)

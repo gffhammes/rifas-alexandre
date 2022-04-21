@@ -29,7 +29,6 @@ export const getServerSideProps = async (context) => {
 };
 
 async function saveUser(user) {
-  console.log(user)
   const response = await fetch('/api/users', {
     method: 'POST',
     body: JSON.stringify(user),
@@ -39,7 +38,30 @@ async function saveUser(user) {
     throw new Error(response.statusText);
   }
 
-  return await response.json;
+  return await response.json();
+}
+
+async function reserveQuotas(userId, raffleId, quotas) {
+  console.log(userId, raffleId, quotas)
+
+  const myObj = {
+    numbers: quotas,
+    raffleId: raffleId,
+    ownerId: userId,
+  }
+
+  const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
+    method: 'PUT',
+    body: JSON.stringify(myObj),
+  });
+
+  console.log(await response.json())
+
+  // if (!response.ok) {
+  //   throw new Error(response.statusText);
+  // }
+
+  // return await response.json;
 }
 
 const Raffle = ({ users, quotas, raffle, ...props }) => {
@@ -70,7 +92,15 @@ const Raffle = ({ users, quotas, raffle, ...props }) => {
       <Head>
         <title>{raffle.name}</title>
       </Head>
-      {openUserForm && <FormDialog open={openUserForm} setOpen={setOpenUserForm} saveUser={saveUser} />}
+      {openUserForm &&
+      <FormDialog
+        open={openUserForm}
+        setOpen={setOpenUserForm}
+        saveUser={saveUser}
+        raffleId={id}
+        reserveQuotas={reserveQuotas}
+        selectedQuotas={selectedNumbers}
+      />}
       <Container>
         <Typography variant='h1'>
           {raffle.name}
@@ -115,7 +145,7 @@ const Raffle = ({ users, quotas, raffle, ...props }) => {
         <Stack direction='row'>
           <Typography>{`${selectedNumbers.length} cota(s) selecionada(s)`}</Typography>
           <Typography sx={{ marginLeft: 'auto' }}>{`${currencyBRLMask(selectedNumbers.length * raffle.ticketPrice)}`}</Typography>
-          <Button variant='contained' onClick={handleBuy} disabled={selectedNumbers.length === 0}>Comprar</Button>
+          <Button variant='contained' onClick={handleBuy} /*disabled={selectedNumbers.length === 0} */>Comprar</Button>
         </Stack>
 
         <Grid container spacing={1}>
