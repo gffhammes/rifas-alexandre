@@ -16,7 +16,10 @@ import prisma from '../../prisma.js'
 
 export const getServerSideProps = async (context) => {
   const users = JSON.stringify(await prisma.users.findMany({}));
-  const quotas = JSON.parse(JSON.stringify(await prisma.quotas.findMany({})));
+  const quotas = JSON.parse(JSON.stringify(await prisma.quotas.findMany({orderBy: [
+    {
+      number: 'asc',
+    }]})));
   const raffle = JSON.parse(JSON.stringify(await prisma.raffles.findUnique({
     where: {
       id: context.params.id,

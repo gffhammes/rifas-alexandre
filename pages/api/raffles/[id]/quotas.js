@@ -17,7 +17,12 @@ export default async function handler(req, res) {
       case 'PUT':
         quotas = await prisma.quotas.updateMany({
           where: {
-            raffleId: id,
+            email: {
+              contains: 'prisma.io',
+            },
+          },
+          data: {
+            role: 'ADMIN',
           },
         })
         res.json(quotas)
