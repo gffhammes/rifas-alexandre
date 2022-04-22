@@ -59,7 +59,7 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 		
 			const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
 				method: 'PUT',
-				body: body,
+				body: JSON.stringify(body),
 			});
 		
 			if (!response.ok) {
@@ -70,13 +70,8 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 		},
 		async saveUserAndReserveQuotas(values, raffleId, selectedQuotas) {
 			actions.setIsReservingQuotas(true);
-			let user;
-			try {
-				await actions.saveUser(values);
-			} catch (error) { }
-			try {
-				await actions.reserveQuotas(user.id, raffleId, selectedQuotas).ok;
-			} catch (error) { }
+			const user = await actions.saveUser(values);
+			await actions.reserveQuotas(user.id, raffleId, selectedQuotas);
 			enqueueSnackbar('Cotas reservadas com sucesso!', { variant: 'success' })
 			actions.setIsReservingQuotas(false);
 		},

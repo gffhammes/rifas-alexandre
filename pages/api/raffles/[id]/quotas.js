@@ -4,13 +4,11 @@ import prisma from '../../../../prisma';
 export default async function handler(req, res) {
     const { id } = req.query;
     let quotas;
-
-    // const body = JSON.parse(req.body)
-
-    const { body } = req;
+    let body;
 
     switch (req.method) {
       case 'GET':
+        body = req.body;
         quotas = await prisma.quotas.findMany({
           where: {
             raffleId: id,
@@ -24,6 +22,7 @@ export default async function handler(req, res) {
         res.json(quotas)
         break;
       case 'PUT':
+        body = JSON.parse(req.body)
         quotas = await prisma.quotas.updateMany({
           where: {
            AND: [
