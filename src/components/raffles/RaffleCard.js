@@ -11,8 +11,8 @@ import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { Box, Stack } from '@mui/material';
-import { IconAndType } from './commons/IconAndType';
-import { currencyBRLMask } from '../helpers/utils';
+import { IconAndType } from '../commons/IconAndType';
+import { currencyBRLMask } from '../../helpers/utils';
 
 export default function MediaCard({ raffleData }) {
   const {
@@ -22,10 +22,8 @@ export default function MediaCard({ raffleData }) {
     description,
     raffleDate,
     ticketPrice,
-    availableTickets,
     prize,
     totalQuotas,
-    totalTickets
   } = raffleData;
 
   return (
@@ -57,7 +55,7 @@ export default function MediaCard({ raffleData }) {
               {currencyBRLMask(ticketPrice)}
             </IconAndType>
             <IconAndType icon={CheckBoxOutlinedIcon}>
-              {`${totalQuotas.available}/${totalQuotas.available + totalQuotas.unavailable} cotas disponíveis`}
+              {`${totalQuotas.available}/${totalQuotas.total} cotas disponíveis`}
             </IconAndType>
           </Stack>
         </Stack>

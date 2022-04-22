@@ -1,7 +1,7 @@
 import { ToggleButton } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 
-export const RaffleButton = ({ quota, selected, setSelected }) => {
+export const QuotaButton = ({ quota, selected, setSelected }) => {
   return (
     <ToggleButton
       value={quota.number}
