@@ -5,6 +5,7 @@ import { getQuotasStats } from '../../helpers/getQuotasStats';
 import { currencyBRLMask } from '../../helpers/utils';
 import FormDialog from '../commons/UserForm/UserForm';
 import { QuotasGrid } from '../quotas/QuotasGrid';
+import { RaffleCart } from './RaffleCart';
 import { RafflePageCard } from './RafflePageCard';
 
 async function saveUser(user) {
@@ -66,13 +67,7 @@ export const RafflePage = ({ raffle, quotas }) => {
       </Head>
       <Container>
         <RafflePageCard raffle={raffle} />
-
-        <Stack direction='row'>
-          <Typography>{`${selectedNumbers.length} cota(s) selecionada(s)`}</Typography>
-          <Typography sx={{ marginLeft: 'auto' }}>{`${currencyBRLMask(selectedNumbers.length * raffle.ticketPrice)}`}</Typography>
-          <Button variant='contained' onClick={handleBuy} disabled={selectedNumbers.length === 0}>Comprar</Button>
-        </Stack>
-
+        <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuy}/>
         <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
       </Container>
 
@@ -81,7 +76,7 @@ export const RafflePage = ({ raffle, quotas }) => {
         open={openUserForm}
         setOpen={setOpenUserForm}
         saveUser={saveUser}
-        raffleId={id}
+        raffleId={raffle.id}
         reserveQuotas={reserveQuotas}
         selectedQuotas={selectedNumbers}
       />}

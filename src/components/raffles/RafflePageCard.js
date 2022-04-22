@@ -8,7 +8,6 @@ import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import { currencyBRLMask } from '../../helpers/utils';
 
 export const RafflePageCard = ({ raffle }) => {
-  console.log(raffle)
   return (
     <Card sx={{ height: 345 }}>
       <Stack direction='row' sx={{ height: '100%' }}>
