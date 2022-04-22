@@ -5,7 +5,9 @@ export default async function handler(req, res) {
     const { id } = req.query;
     let quotas;
 
-    const body = JSON.parse(req.body)
+    // const body = JSON.parse(req.body)
+
+    const { body } = req;
 
     switch (req.method) {
       case 'GET':
@@ -13,6 +15,11 @@ export default async function handler(req, res) {
           where: {
             raffleId: id,
           },
+          orderBy: [
+            {
+              number: 'asc',
+            },
+          ],
         })
         res.json(quotas)
         break;

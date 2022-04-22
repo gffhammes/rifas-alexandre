@@ -1,23 +1,31 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import Head from 'next/head';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getQuotasStats } from '../../helpers/getQuotasStats';
 import FormDialog from '../commons/UserForm/UserForm';
 import { QuotasGrid } from '../quotas/QuotasGrid';
 import { RaffleCart } from './RaffleCart';
 import { RafflePageCard } from './RafflePageCard';
+import LoadingCircle from '../commons/LoadingCircle'
 
 export const RafflePage = ({
   raffle,
   quotas,
   saveUserAndReserveQuotas,
   isReservingQuotas,
-  setIsReservingQuotas
+  setIsReservingQuotas,
+  getQuotas,
 }) => {
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [openUserForm, setOpenUserForm] = useState(false);
 
-  raffle = getQuotasStats(quotas, raffle);
+  useEffect(() => {
+    getQuotas(raffle.id)
+  }, [])
+
+  if (quotas.length > 0) {
+    raffle = getQuotasStats(quotas, raffle);
+  }
 
   const handleNumberClick = (number) => {
     if (selectedNumbers.includes(number)) {
@@ -36,13 +44,17 @@ export const RafflePage = ({
       <Head>
         <title>{raffle.name}</title>
       </Head>
-      <Container>
-        <Stack spacing={4}>
-          <RafflePageCard raffle={raffle} />
-          <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuy}/>
-          <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
-        </Stack>
-      </Container>
+      {
+        quotas.length === 0  ?
+        <LoadingCircle /> :
+        <Container>
+          <Stack spacing={4}>
+            <RafflePageCard raffle={raffle} />
+            <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuy}/>
+            <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
+          </Stack>
+        </Container>
+      }
 
       {openUserForm &&
       <FormDialog

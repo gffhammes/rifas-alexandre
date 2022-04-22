@@ -59,7 +59,7 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 		
 			const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
 				method: 'PUT',
-				body: JSON.stringify(body),
+				body: body,
 			});
 		
 			if (!response.ok) {
@@ -81,19 +81,23 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 			actions.setIsReservingQuotas(false);
 		},
 		async getQuotas(raffleId) {
+			const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
+				method: 'GET',
+			});
 
+			actions.setQuotas(await response.json())
 		},
 	};
 
 	return actions;
 };
 
-const RafflePage = ({ raffle, quotas }) => {
+const RafflePage = ({ raffle }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const { enqueueSnackbar } = useSnackbar();
 	const actions = RaffleActions(dispatch, enqueueSnackbar);
 
-	return <RafflePagePresentational {...state} {...actions} raffle={raffle} quotas={quotas}/>;
+	return <RafflePagePresentational {...state} {...actions} raffle={raffle} />;
 };
 
 export default RafflePage;
