@@ -7,6 +7,7 @@ import { QuotasGrid } from '../quotas/QuotasGrid';
 import { RaffleCart } from './RaffleCart';
 import { RafflePageCard } from './RafflePageCard';
 import LoadingCircle from '../commons/LoadingCircle'
+import { HomeButton } from '../commons/HomeButton';
 
 export const RafflePage = ({
   raffle,
@@ -52,8 +53,9 @@ export const RafflePage = ({
       {
         quotas.length === 0  ?
         <LoadingCircle /> :
-        <Container>
+        <Container sx={{ paddingTop: 4 }}>
           <Stack spacing={4}>
+            <HomeButton />
             <RafflePageCard raffle={raffle} />
             <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuyClick}/>
             <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
