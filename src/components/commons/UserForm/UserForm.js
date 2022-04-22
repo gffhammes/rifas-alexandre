@@ -6,16 +6,17 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Input } from './Input';
 import { Form, Formik, useFormik } from 'formik';
 
 export default function FormDialog({
   open,
   setOpen,
-  saveUser,
-  reserveQuotas,
   raffleId,
   selectedQuotas,
+  saveUserAndReserveQuotas,
+  isReservingQuotas,
   ...props
 }) {
 
@@ -51,13 +52,7 @@ export default function FormDialog({
           initialValues={{ name: '', email: '', phone: '' }}
           validate={validate}
           onSubmit={async (values, actions, e) => {
-            let user;
-            try {
-              user = await saveUser(values);
-            } catch (error) {
-              //error && console.log(error);
-            }
-            await reserveQuotas(user.id, raffleId, selectedQuotas);
+            await saveUserAndReserveQuotas(values, raffleId, selectedQuotas);
             handleClose();
           }}
         >
@@ -97,7 +92,7 @@ export default function FormDialog({
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancelar</Button>
-                <Button variant='contained' type='submit'>Comprar</Button>
+                <LoadingButton loading={isReservingQuotas} variant='contained' type='submit'>Comprar</LoadingButton>
               </DialogActions>
             </Form>
           )}

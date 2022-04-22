@@ -8,41 +8,46 @@ import { QuotasGrid } from '../quotas/QuotasGrid';
 import { RaffleCart } from './RaffleCart';
 import { RafflePageCard } from './RafflePageCard';
 
-async function saveUser(user) {
-  const response = await fetch('/api/users', {
-    method: 'POST',
-    body: JSON.stringify(user),
-  });
+// async function saveUser(user) {
+//   const response = await fetch('/api/users', {
+//     method: 'POST',
+//     body: JSON.stringify(user),
+//   });
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
+//   if (!response.ok) {
+//     throw new Error(response.statusText);
+//   }
 
-  return await response.json();
-}
+//   return await response.json();
+// }
 
-async function reserveQuotas(userId, raffleId, quotas) {
-  console.log(userId, raffleId, quotas)
+// async function reserveQuotas(userId, raffleId, quotas) {
+//   console.log(userId, raffleId, quotas)
 
-  const myObj = {
-    numbers: quotas,
-    raffleId: raffleId,
-    ownerId: userId,
-  }
+//   const myObj = {
+//     numbers: quotas,
+//     raffleId: raffleId,
+//     ownerId: userId,
+//   }
 
-  const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
-    method: 'PUT',
-    body: JSON.stringify(myObj),
-  });
+//   const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
+//     method: 'PUT',
+//     body: JSON.stringify(myObj),
+//   });
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
+//   if (!response.ok) {
+//     throw new Error(response.statusText);
+//   }
 
-  return await response.json;
-}
+//   return await response.json;
+// }
 
-export const RafflePage = ({ raffle, quotas }) => {
+export const RafflePage = ({
+  raffle,
+  quotas,
+  saveUserAndReserveQuotas,
+  isReservingQuotas
+}) => {
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [openUserForm, setOpenUserForm] = useState(false);
 
@@ -77,10 +82,10 @@ export const RafflePage = ({ raffle, quotas }) => {
       <FormDialog
         open={openUserForm}
         setOpen={setOpenUserForm}
-        saveUser={saveUser}
         raffleId={raffle.id}
-        reserveQuotas={reserveQuotas}
         selectedQuotas={selectedNumbers}
+        saveUserAndReserveQuotas={saveUserAndReserveQuotas}
+        isReservingQuotas={isReservingQuotas}
       />}
     </>
   )
