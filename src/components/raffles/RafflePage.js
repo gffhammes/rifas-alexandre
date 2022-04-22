@@ -53,7 +53,7 @@ export const RafflePage = ({
       {
         quotas.length === 0  ?
         <LoadingCircle /> :
-        <Container sx={{ paddingTop: 4 }}>
+        <Container sx={{ paddingTop: 4 }} maxWidth="md">
           <Stack spacing={4}>
             <HomeButton />
             <RafflePageCard raffle={raffle} />

@@ -14,7 +14,7 @@ import { Box, Stack } from '@mui/material';
 import { IconAndType } from '../commons/IconAndType';
 import { currencyBRLMask } from '../../helpers/utils';
 
-export default function MediaCard({ raffleData }) {
+export default function RaffleCard({ raffleData }) {
   const {
     id,
     image,
@@ -27,7 +27,7 @@ export default function MediaCard({ raffleData }) {
   } = raffleData;
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ width: '100%' }}>
       <Box sx={{ height: 300, width: '100%', position: 'relative' }}>
         <Image
           src={`/images/${image}`}

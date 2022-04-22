@@ -9,9 +9,21 @@ import { currencyBRLMask } from '../../helpers/utils';
 
 export const RafflePageCard = ({ raffle }) => {
   return (
-    <Card sx={{ height: 345 }}>
-      <Stack direction='row' sx={{ height: '100%' }}>
-        <Box sx={{ height: '100%', width: 700, position: 'relative' }}>
+    <Card sx={{ minHeight: 345 }}>
+      <Stack direction={{ xs: 'column', md: 'row' }} sx={{ height: '100%' }}>
+        <Box
+          sx={{
+            height: {
+              xs: 300,
+              md: '100%',
+            },
+            width: {
+              xs: '100%',
+              md: 700,
+            },
+            position: 'relative'
+          }}
+        >
           <Image
             src={`/images/${raffle.image}`}
             layout='fill'

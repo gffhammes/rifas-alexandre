@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import prisma from '../prisma'
 import { raffles } from '../src/assets/raffle'
+import { HomePage } from '../src/components/home/HomePage'
 import MediaCard from '../src/components/raffles/RaffleCard'
 import { getQuotasStats } from '../src/helpers/getQuotasStats'
 
@@ -23,21 +24,6 @@ export default function Home(props) {
   })
   
   return (
-    <>
-      <Head>
-        <title>Rifas</title>
-      </Head>
-      <Container>
-        <Typography variant='h1'>Rifas</Typography>
-        {raffles.map((raffle, index) => {
-          return (
-            <MediaCard
-              key={index}
-              raffleData={raffle}
-            />
-          )        
-        })}
-      </Container>
-    </>
+    <HomePage raffles={raffles} />
   )
 }
