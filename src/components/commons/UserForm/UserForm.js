@@ -13,9 +13,7 @@ import { Form, Formik, useFormik } from 'formik';
 export default function FormDialog({
   open,
   setOpen,
-  raffleId,
-  selectedQuotas,
-  saveUserAndReserveQuotas,
+  handleBuy,
   isReservingQuotas,
   setIsReservingQuotas,
   ...props
@@ -52,8 +50,8 @@ export default function FormDialog({
         <Formik
           initialValues={{ name: '', email: '', phone: '' }}
           validate={validate}
-          onSubmit={async (values, actions, e) => {
-            await saveUserAndReserveQuotas(values, raffleId, selectedQuotas)
+          onSubmit={async (values) => {
+            await handleBuy(values)
             handleClose();
           }}
         >

@@ -44,11 +44,11 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 				body: JSON.stringify(user),
 			});
 		
-			if (!response.ok) {
-				throw new Error(response.statusText);
-			}
+			// if (!response.ok) {
+			// 	throw new Error(response.statusText);
+			// }
 		
-			return await response.json();
+			return await response
 		},
 		async reserveQuotas(userId, raffleId, quotas) {		
 			const body = {
@@ -66,14 +66,23 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 				throw new Error(response.statusText);
 			}
 		
-			return await response.json;
+			return await response.json();
 		},
 		async saveUserAndReserveQuotas(values, raffleId, selectedQuotas) {
 			actions.setIsReservingQuotas(true);
 			const user = await actions.saveUser(values);
-			await actions.reserveQuotas(user.id, raffleId, selectedQuotas);
-			enqueueSnackbar('Cotas reservadas com sucesso!', { variant: 'success' })
-			actions.setIsReservingQuotas(false);
+
+			if (user.status === 200) {
+				const quotas = await actions.reserveQuotas(user.json().id, raffleId, selectedQuotas);
+				actions.getQuotas(raffleId);
+				enqueueSnackbar('Cotas reservadas com sucesso!', { variant: 'success' })
+				actions.setIsReservingQuotas(false);
+				return await quotas;
+			} else {
+				actions.setIsReservingQuotas(false);
+				enqueueSnackbar('Algum erro ocorreu. Tente novamente ou contate o suporte.', { variant: 'error' })
+			}
+
 		},
 		async getQuotas(raffleId) {
 			const response = await fetch(`/api/raffles/${raffleId}/quotas`, {

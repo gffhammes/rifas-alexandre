@@ -35,8 +35,13 @@ export const RafflePage = ({
     }
   }
 
-  const handleBuy = () => {
+  const handleBuyClick = () => {
     setOpenUserForm(true)
+  }
+
+  const handleBuy = async (values) => {
+    const reservedQuotas = await saveUserAndReserveQuotas(values, raffle.id, selectedNumbers)
+    setSelectedNumbers([])
   }
 
   return (
@@ -50,7 +55,7 @@ export const RafflePage = ({
         <Container>
           <Stack spacing={4}>
             <RafflePageCard raffle={raffle} />
-            <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuy}/>
+            <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuyClick}/>
             <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
           </Stack>
         </Container>
@@ -60,9 +65,7 @@ export const RafflePage = ({
       <FormDialog
         open={openUserForm}
         setOpen={setOpenUserForm}
-        raffleId={raffle.id}
-        selectedQuotas={selectedNumbers}
-        saveUserAndReserveQuotas={saveUserAndReserveQuotas}
+        handleBuy={handleBuy}
         isReservingQuotas={isReservingQuotas}
         setIsReservingQuotas={setIsReservingQuotas}
       />}
