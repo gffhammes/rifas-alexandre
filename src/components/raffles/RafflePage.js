@@ -66,9 +66,11 @@ export const RafflePage = ({ raffle, quotas }) => {
         <title>{raffle.name}</title>
       </Head>
       <Container>
-        <RafflePageCard raffle={raffle} />
-        <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuy}/>
-        <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
+        <Stack spacing={4}>
+          <RafflePageCard raffle={raffle} />
+          <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuy}/>
+          <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
+        </Stack>
       </Container>
 
       {openUserForm &&
