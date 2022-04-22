@@ -7,9 +7,6 @@ export default async function handler(req, res) {
 
     const body = JSON.parse(req.body)
 
-    console.log(body)
-    console.log(body.ownerId)
-
     switch (req.method) {
       case 'GET':
         quotas = await prisma.quotas.findMany({

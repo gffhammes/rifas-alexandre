@@ -1,11 +1,14 @@
 import '../src/styles/globals.scss'
 import ContextProvider from '../src/contexts/Context';
+import { SnackbarProvider } from 'notistack';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ContextProvider>
-      <Component {...pageProps} />
-    </ContextProvider>
+    <SnackbarProvider maxSnack={3}>
+      <ContextProvider>
+        <Component {...pageProps} />
+      </ContextProvider>
+    </SnackbarProvider>
   )
 }
 

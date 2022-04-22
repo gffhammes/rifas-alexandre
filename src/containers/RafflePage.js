@@ -1,14 +1,17 @@
 import React, { useReducer } from 'react';
 import { RafflePage as RafflePagePresentational } from '../components/raffles/RafflePage';
+import { useSnackbar } from 'notistack';
 
 const typeActions = {
 	loading: 0,
  	isReservingQuotas: 1,
+	quotas: 2,
 }
  
 const initialState = {
 	loading: false,
 	isReservingQuotas: false,
+	quotas: [],
 };
 
 const reducer = (state, action) => {
@@ -17,18 +20,23 @@ const reducer = (state, action) => {
 			return { ...state, loading: action.payload.loading };
 		case typeActions.isReservingQuotas:
 			return { ...state, isReservingQuotas: action.payload.isReservingQuotas };
+		case typeActions.quotas:
+			return { ...state, quotas: action.payload.quotas };
 		default:
 			throw new Error();
 	}
 };
 
-const RaffleActions = (dispatch) => {
+const RaffleActions = (dispatch, enqueueSnackbar) => {
 	const actions = {		
 		setLoading(loading) {
 			dispatch({ type: typeActions.loading, payload: { loading } });
 		},
 		setIsReservingQuotas(isReservingQuotas) {
 			dispatch({ type: typeActions.isReservingQuotas, payload: { isReservingQuotas } });
+		},
+		setQuotas(quotas) {
+			dispatch({ type: typeActions.quotas, payload: { quotas } });
 		},
 		async saveUser(user) {
 			const response = await fetch('/api/users', {
@@ -64,13 +72,17 @@ const RaffleActions = (dispatch) => {
 			actions.setIsReservingQuotas(true);
 			let user;
 			try {
-				user = await actions.saveUser(values);
-			} catch (error) {
-				//error && console.log(error);
-			}
-			await actions.reserveQuotas(user.id, raffleId, selectedQuotas);
+				await actions.saveUser(values);
+			} catch (error) { }
+			try {
+				await actions.reserveQuotas(user.id, raffleId, selectedQuotas).ok;
+			} catch (error) { }
+			enqueueSnackbar('Cotas reservadas com sucesso!', { variant: 'success' })
 			actions.setIsReservingQuotas(false);
-		}
+		},
+		async getQuotas(raffleId) {
+
+		},
 	};
 
 	return actions;
@@ -78,7 +90,8 @@ const RaffleActions = (dispatch) => {
 
 const RafflePage = ({ raffle, quotas }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const actions = RaffleActions(dispatch);
+	const { enqueueSnackbar } = useSnackbar();
+	const actions = RaffleActions(dispatch, enqueueSnackbar);
 
 	return <RafflePagePresentational {...state} {...actions} raffle={raffle} quotas={quotas}/>;
 };

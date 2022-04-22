@@ -17,11 +17,12 @@ export default function FormDialog({
   selectedQuotas,
   saveUserAndReserveQuotas,
   isReservingQuotas,
+  setIsReservingQuotas,
   ...props
 }) {
-
   const handleClose = () => {
     setOpen(false);
+    setIsReservingQuotas(false);
   };
 
   const validate = (values) => {
@@ -52,7 +53,7 @@ export default function FormDialog({
           initialValues={{ name: '', email: '', phone: '' }}
           validate={validate}
           onSubmit={async (values, actions, e) => {
-            await saveUserAndReserveQuotas(values, raffleId, selectedQuotas);
+            await saveUserAndReserveQuotas(values, raffleId, selectedQuotas)
             handleClose();
           }}
         >
@@ -98,6 +99,6 @@ export default function FormDialog({
           )}
         </Formik>
       </Dialog>
-    </div>
+    </div>    
   );
 }
