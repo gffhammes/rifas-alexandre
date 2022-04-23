@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import { Container, Grid, Typography } from '@mui/material'
-import RaffleCard from '../raffles/RaffleCard'
+import RaffleCard from './RaffleCard'
 
 
 export const HomePage = ({ raffles }) => {
@@ -15,7 +15,7 @@ export const HomePage = ({ raffles }) => {
         <Grid container>
           {raffles.map((raffle, index) => {
             return (
-              <Grid item key={index} xs={12} sm={6} xl={4}>
+              <Grid item key={index} xs={12}>
                 <RaffleCard raffleData={raffle} />
               </Grid>
             )        

@@ -8,6 +8,7 @@ import { RaffleCart } from './RaffleCart';
 import { RafflePageCard } from './RafflePageCard';
 import LoadingCircle from '../commons/LoadingCircle'
 import { HomeButton } from '../commons/HomeButton';
+import CheckoutDialog from '../commons/Checkout/CheckoutDialog';
 
 export const RafflePage = ({
   raffle,
@@ -63,14 +64,16 @@ export const RafflePage = ({
         </Container>
       }
 
-      {openUserForm &&
+      {openUserForm && <CheckoutDialog open={openUserForm} setOpen={setOpenUserForm} selectedNumbers={selectedNumbers} raffle={raffle}/>}
+
+      {/* {openUserForm &&
       <FormDialog
         open={openUserForm}
         setOpen={setOpenUserForm}
         handleBuy={handleBuy}
         isReservingQuotas={isReservingQuotas}
         setIsReservingQuotas={setIsReservingQuotas}
-      />}
+      />} */}
     </>
   )
 }

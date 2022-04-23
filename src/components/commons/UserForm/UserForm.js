@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -91,7 +90,7 @@ export default function FormDialog({
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancelar</Button>
-                <LoadingButton loading={isReservingQuotas} variant='contained' type='submit'>Comprar</LoadingButton>
+                <LoadingButton loading={isReservingQuotas} variant='contained' type='submit'>CONTINUAR</LoadingButton>
               </DialogActions>
             </Form>
           )}

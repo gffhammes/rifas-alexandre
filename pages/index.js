@@ -2,9 +2,7 @@ import { Container, Typography } from '@mui/material'
 import Head from 'next/head'
 import Image from 'next/image'
 import prisma from '../prisma'
-import { raffles } from '../src/assets/raffle'
 import { HomePage } from '../src/components/home/HomePage'
-import MediaCard from '../src/components/raffles/RaffleCard'
 import { getQuotasStats } from '../src/helpers/getQuotasStats'
 
 export const getServerSideProps = async () => {

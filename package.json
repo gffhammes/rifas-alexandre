@@ -20,6 +20,7 @@
     "next-sass": "^1.0.3",
     "notistack": "^2.0.4",
     "nprogress": "^0.2.0",
+    "qrcode-pix": "4.0.1",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "sass": "^1.50.0"

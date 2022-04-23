@@ -9,13 +9,13 @@ import { currencyBRLMask } from '../../helpers/utils';
 
 export const RafflePageCard = ({ raffle }) => {
   return (
-    <Card sx={{ minHeight: 345 }}>
+    <Card sx={{ height: 'fit-content' }}>
       <Stack direction={{ xs: 'column', md: 'row' }} sx={{ height: '100%' }}>
         <Box
           sx={{
             height: {
-              xs: 300,
-              md: '100%',
+              xs: 270,
+              md: 270,
             },
             width: {
               xs: '100%',
