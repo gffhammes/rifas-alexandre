@@ -9,7 +9,7 @@ export const CheckoutSummary = ({ selectedNumbers, raffle, total }) => {
       <Stack direction='row' flexWrap='wrap' spacing={1}>
         {selectedNumbers.map((number) => <Chip key={number} label={number}/>)}
       </Stack>
-      <Typography>Efetue o pagamento para efetivar a sua participação no sorteio!</Typography>
+      <Typography>Você deve efetuar o pagamento via PIX em até <strong>10min.</strong> para efetivar a sua participação no sorteio!</Typography>
       <Stack direction='row'>        
         <Typography>{selectedNumbers.length} cota(s)</Typography>
         <Typography>{currencyBRLMask(total)}</Typography>

@@ -27,6 +27,8 @@ export default function CheckoutDialog({
   };
 
   const [pixLink, setPixLink] = React.useState();
+  
+  const totalPrice = selectedNumbers.length * raffle.ticketPrice
 
   const setPix = async () => {
     setPixLink(await qrCodePix(totalPrice).payload())
@@ -34,7 +36,6 @@ export default function CheckoutDialog({
 
   setPix()
 
-  const totalPrice = selectedNumbers.length * raffle.ticketPrice
 
   const accountData = [
     {
