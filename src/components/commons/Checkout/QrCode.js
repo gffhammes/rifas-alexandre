@@ -6,12 +6,11 @@ import LoadingCircle from '../LoadingCircle'
 export const QrCode = ({ value }) => {
   const [qrCode, setQrCode] = React.useState()
 
-  async function test() {
+  async function setPix() {
     setQrCode(await qrCodePix(value).base64());
   }
 
-  test()
+  setPix()
 
-  return qrCode ? <Image src={qrCode} height={200} width={200} alt='qr code pix' /> : <LoadingCircle />
-  
+  return qrCode ? <Image src={qrCode} layout='fill' alt='qr code pix' objectFit='contain' /> : <LoadingCircle />  
 }
