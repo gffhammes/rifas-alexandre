@@ -1,8 +1,10 @@
 import { IconButton, Stack, Typography } from '@mui/material'
 import React from 'react'
+import Link from 'next/link'
 import { CopyToClipboard } from '../CopyToClipboard/CopyToClipboard';
-import { allPixData, qrCodePix } from './PixData'
+import { pixData, qrCodePix } from './PixData'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import LaunchIcon from '@mui/icons-material/Launch';
 import { truncate } from '../../../helpers/truncate';
 
 
@@ -23,27 +25,15 @@ export const CheckoutAccountData = ({ totalPrice, sx }) => {
     },
     {
       label: 'Chave pix',
-      data: allPixData.key,
+      data: pixData.key,
     },
     {
-      label: 'Banco',
-      data: allPixData.bank,
+      label: 'Pag seguro R$ 17,50',
+      data: 'https://pag.ae/7YcW99CQo',
     },
     {
-      label: 'Agência',
-      data: allPixData.agency,
-    },
-    {
-      label: 'Conta',
-      data: allPixData.account,
-    },
-    {
-      label: 'Nome',
-      data: allPixData.name,
-    },
-    {
-      label: 'CPF',
-      data: allPixData.cpf,
+      label: 'Pag seguro R$ 30,00',
+      data: 'https://pag.ae/7YcW6LY2K',
     },
   ]
 
@@ -55,13 +45,24 @@ export const CheckoutAccountData = ({ totalPrice, sx }) => {
             <Typography variant='caption'>{item.label}</Typography>
             <Stack direction='row' alignItems='center' spacing={1}>
               <Typography variant='overline'>{truncate(item.data, 25)}</Typography>
-              <CopyToClipboard>
-                {({ copy }) => (
-                  <IconButton onClick={() => copy(item.data)} size="small">
-                    <ContentCopyIcon fontSize="inherit"/>
-                  </IconButton>
-                )}
-              </CopyToClipboard>
+              {
+                item.data && item.data.includes('http')
+                ? <Link href={item.data} passHref>
+                    <a target='_blank'>
+                      <IconButton size="small">
+                        <LaunchIcon fontSize="inherit"/>
+                      </IconButton>
+                    </a>
+                  </Link>
+                : <CopyToClipboard>
+                    {({ copy }) => (
+                      <IconButton onClick={() => copy(item.data)} size="small">
+                        <ContentCopyIcon fontSize="inherit"/>
+                      </IconButton>
+                    )}
+                  </CopyToClipboard>
+              }
+              
             </Stack>
           </Stack>
         )
