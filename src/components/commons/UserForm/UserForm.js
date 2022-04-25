@@ -8,19 +8,19 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Input } from './Input';
 import { Form, Formik, useFormik } from 'formik';
+import { Box, Typography } from '@mui/material';
 
-export default function FormDialog({
-  open,
-  setOpen,
+export function UserForm({
   handleBuy,
   isReservingQuotas,
   setIsReservingQuotas,
+  handleClose,
+  setIsUserForm,
   ...props
 }) {
-  const handleClose = () => {
-    setOpen(false);
-    setIsReservingQuotas(false);
-  };
+  // const handleClose = () => {
+  //   setIsReservingQuotas(false);
+  // };
 
   const validate = (values) => {
     const errors = {};
@@ -43,51 +43,45 @@ export default function FormDialog({
   }
 
   return (
-    <div>
-      <Dialog open={open} >
-        <DialogTitle>Dados pessoais</DialogTitle>
+    <Box sx={{ height: '100%', overflowY: 'auto'}}>
         <Formik
           initialValues={{ name: '', email: '', phone: '' }}
           validate={validate}
           onSubmit={async (values) => {
             await handleBuy(values)
-            handleClose();
+            setIsUserForm(false)
           }}
         >
           {(props) => (
             <Form onSubmit={props.handleSubmit} noValidate>
-              <DialogContent>
-                <DialogContentText>
-                  Para comprar as cotas é necessário informar alguns dados pessoais.
-                </DialogContentText>
-                <Input
-                  id="name"
-                  name="name"
-                  label="Nome"
-                  type="text"
-                  fullWidth
-                  required
-                  margin='normal'
-                />
-                <Input
-                  id="email"
-                  name="email"
-                  label="Email"
-                  type="email"
-                  fullWidth
-                  required
-                  margin='normal'
-                />
-                <Input
-                  id="phone"
-                  name="phone"
-                  label="Telefone"
-                  type="number"
-                  fullWidth
-                  required
-                  margin='normal'
-                />
-              </DialogContent>
+              <Input
+                id="name"
+                name="name"
+                label="Nome"
+                type="text"
+                fullWidth
+                required
+                margin='normal'
+              />
+              <Input
+                id="email"
+                name="email"
+                label="Email"
+                type="email"
+                fullWidth
+                required
+                margin='normal'
+              />
+              <Input
+                id="phone"
+                name="phone"
+                label="Telefone"
+                type="number"
+                fullWidth
+                required
+                margin='normal'
+              />
+
               <DialogActions>
                 <Button onClick={handleClose}>Cancelar</Button>
                 <LoadingButton loading={isReservingQuotas} variant='contained' type='submit'>CONTINUAR</LoadingButton>
@@ -95,7 +89,6 @@ export default function FormDialog({
             </Form>
           )}
         </Formik>
-      </Dialog>
-    </div>    
+    </Box>    
   );
 }

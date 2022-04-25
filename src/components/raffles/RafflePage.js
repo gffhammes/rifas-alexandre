@@ -2,7 +2,7 @@ import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react'
 import { getQuotasStats } from '../../helpers/getQuotasStats';
-import FormDialog from '../commons/UserForm/UserForm';
+import UserForm from '../commons/UserForm/UserForm';
 import { QuotasGrid } from '../quotas/QuotasGrid';
 import { RaffleCart } from './RaffleCart';
 import { RafflePageCard } from './RafflePageCard';
@@ -42,8 +42,8 @@ export const RafflePage = ({
   }
 
   const handleBuy = async (values) => {
-    const reservedQuotas = await saveUserAndReserveQuotas(values, raffle.id, selectedNumbers)
-    setSelectedNumbers([])
+    await saveUserAndReserveQuotas(values, raffle.id, selectedNumbers)
+    // setSelectedNumbers([])
   }
 
   return (
@@ -64,10 +64,23 @@ export const RafflePage = ({
         </Container>
       }
 
-      {openUserForm && <CheckoutDialog open={openUserForm} setOpen={setOpenUserForm} selectedNumbers={selectedNumbers} raffle={raffle}/>}
+      {
+        openUserForm &&
+        <CheckoutDialog
+          open={openUserForm}
+          setOpen={setOpenUserForm}
+          selectedNumbers={selectedNumbers}
+          raffle={raffle}
+          UserForm={UserForm}
+          handleBuy={handleBuy}
+          isReservingQuotas={isReservingQuotas}
+          setIsReservingQuotas={setIsReservingQuotas}
+          setSelectedNumbers={setSelectedNumbers}
+        />
+      }
 
       {/* {openUserForm &&
-      <FormDialog
+      <UserForm
         open={openUserForm}
         setOpen={setOpenUserForm}
         handleBuy={handleBuy}

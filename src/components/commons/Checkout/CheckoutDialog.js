@@ -14,96 +14,53 @@ import { Box, IconButton, Divider, ListItem, ListItemText, Stack, Typography } f
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { CopyToClipboard } from '../CopyToClipboard/CopyToClipboard';
 import { truncate } from '../../../helpers/truncate';
+import { TextMobileStepper } from './CheckoutStepper';
+import { UserForm } from '../UserForm/UserForm';
 
 export default function CheckoutDialog({
   open,
   setOpen,
   selectedNumbers,
   raffle,
+  handleBuy,
+  isReservingQuotas,
+  setIsReservingQuotas,
+  setSelectedNumbers,
   ...props
 }) {
   const handleClose = () => {
     setOpen(false);
   };
 
-  const [pixLink, setPixLink] = React.useState();
-  
+  const [isUserForm, setIsUserForm] = React.useState(true);
+
   const totalPrice = selectedNumbers.length * raffle.ticketPrice
-
-  const setPix = async () => {
-    setPixLink(await qrCodePix(totalPrice).payload())
-  }
-
-  setPix()
-
-
-  const accountData = [
-    {
-      label: 'Pix copia e cola',
-      data: pixLink,
-    },
-    {
-      label: 'Chave pix',
-      data: allPixData.key,
-    },
-    {
-      label: 'Banco',
-      data: allPixData.bank,
-    },
-    {
-      label: 'Agência',
-      data: allPixData.agency,
-    },
-    {
-      label: 'Conta',
-      data: allPixData.account,
-    },
-    {
-      label: 'Nome',
-      data: allPixData.name,
-    },
-    {
-      label: 'CPF',
-      data: allPixData.cpf,
-    },
-  ]
 
   return (
     <div>
-      <Dialog open={open} >
-        <DialogTitle>Pagamento</DialogTitle>
-        <DialogContent>
-          <Stack direction={{ xs: 'column', md: 'row'}}>
-            <CheckoutSummary selectedNumbers={selectedNumbers} raffle={raffle} total={totalPrice}/>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant='h6' mb>Dados bancários</Typography>
-            <Stack spacing={1.5}>
-              {accountData.map((item, index) => {
-                return (
-                  <Stack key={index}>
-                    <Typography variant='caption'>{item.label}</Typography>
-                    <Stack direction='row' alignItems='center' spacing={1}>
-                      <Typography variant='overline'>{truncate(item.data, 25)}</Typography>
-                      <CopyToClipboard>
-                        {({ copy }) => (
-                          <IconButton onClick={() => copy(item.data)} size="small">
-                            <ContentCopyIcon fontSize="inherit"/>
-                          </IconButton>
-                        )}
-                      </CopyToClipboard>
-                    </Stack>
-                  </Stack>
-                )
-              })}
-            </Stack>
-            <Box height={200} width={200} sx={{ position: 'relative' }}>
-              <QrCode value={totalPrice} />
-            </Box>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button variant='contained' onClick={handleClose}>FINALIZAR</Button>
-        </DialogActions>
+      <Dialog open={open} fullWidth>
+        <DialogTitle>{isUserForm ? 'Dados pessoais' : 'Finalizar'}</DialogTitle>
+        <DialogContent sx={{ overflowY: 'hidden', height: '100%' }}>
+          {isUserForm
+          ? <UserForm
+              handleBuy={handleBuy}
+              isReservingQuotas={isReservingQuotas}
+              setIsReservingQuotas={setIsReservingQuotas}
+              handleClose={handleClose}
+              setIsUserForm={setIsUserForm}
+            />
+          : <TextMobileStepper
+              selectedNumbers={selectedNumbers}
+              raffle={raffle}
+              totalPrice={totalPrice}
+              handleBuy={handleBuy}
+              isReservingQuotas={isReservingQuotas}
+              setIsReservingQuotas={setIsReservingQuotas}
+              handleClose={handleClose}
+              setSelectedNumbers={setSelectedNumbers}
+            />}
+          
+        </DialogContent>        
       </Dialog>
     </div>    
   );
