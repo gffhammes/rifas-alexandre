@@ -20,9 +20,7 @@ export const RafflePage = ({
 }) => {
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [openUserForm, setOpenUserForm] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0)
-
-  
+  const [totalPrice, setTotalPrice] = useState(0)  
 
   useEffect(() => {
     getQuotas(raffle.id)
@@ -55,8 +53,13 @@ export const RafflePage = ({
   }
 
   const handleBuy = async (values) => {
-    await saveUserAndReserveQuotas(values, raffle.id, selectedNumbers)
-    // setSelectedNumbers([])
+    const response = await saveUserAndReserveQuotas(values, raffle.id, selectedNumbers);
+
+    if (await response.status === 409) {
+      getQuotas(raffle.id)
+      setOpenUserForm(false);
+      setSelectedNumbers([])
+    }
   }
 
   return (
@@ -67,7 +70,7 @@ export const RafflePage = ({
       {
         quotas.length === 0  ?
         <LoadingCircle /> :
-        <Container sx={{ paddingTop: 4 }} maxWidth="md">
+        <Container sx={{ py: 4 }} maxWidth="md">
           <Stack spacing={4}>
             <HomeButton />
             <RafflePageCard raffle={raffle} />
@@ -92,15 +95,6 @@ export const RafflePage = ({
           totalPrice={totalPrice}
         />
       }
-
-      {/* {openUserForm &&
-      <UserForm
-        open={openUserForm}
-        setOpen={setOpenUserForm}
-        handleBuy={handleBuy}
-        isReservingQuotas={isReservingQuotas}
-        setIsReservingQuotas={setIsReservingQuotas}
-      />} */}
     </>
   )
 }

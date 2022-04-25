@@ -70,7 +70,7 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 				if (quotas.status === 409) {
 					enqueueSnackbar('Cotas indisponíveis. Tente novamente.', { variant: 'error' })
 					actions.setIsReservingQuotas(false);
-					return;
+					return quotas;
 				}
 				const quotasData = await quotas.json();
 				actions.getQuotas(raffleId);
