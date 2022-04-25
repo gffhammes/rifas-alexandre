@@ -43,11 +43,7 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 				method: 'POST',
 				body: JSON.stringify(user),
 			});
-		
-			// if (!response.ok) {
-			// 	throw new Error(response.statusText);
-			// }
-		
+				
 			return await response
 		},
 		async reserveQuotas(userId, raffleId, quotas) {		
@@ -62,22 +58,25 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 				body: JSON.stringify(body),
 			});
 		
-			if (!response.ok) {
-				throw new Error(response.statusText);
-			}
-		
-			return await response.json();
+			return await response;
 		},
 		async saveUserAndReserveQuotas(values, raffleId, selectedQuotas) {
 			actions.setIsReservingQuotas(true);
 			const user = await actions.saveUser(values);
+			const userData = await user.json()
 
 			if (user.status === 200) {
-				const quotas = await actions.reserveQuotas(user.json().id, raffleId, selectedQuotas);
+				const quotas = await actions.reserveQuotas(userData.id, raffleId, selectedQuotas);
+				if (quotas.status === 409) {
+					enqueueSnackbar('Cotas indisponíveis. Tente novamente.', { variant: 'error' })
+					actions.setIsReservingQuotas(false);
+					return;
+				}
+				const quotasData = await quotas.json();
 				actions.getQuotas(raffleId);
 				enqueueSnackbar('Cotas reservadas com sucesso!', { variant: 'success' })
 				actions.setIsReservingQuotas(false);
-				return await quotas;
+				return await quotasData;
 			} else {
 				actions.setIsReservingQuotas(false);
 				enqueueSnackbar('Algum erro ocorreu. Tente novamente ou contate o suporte.', { variant: 'error' })

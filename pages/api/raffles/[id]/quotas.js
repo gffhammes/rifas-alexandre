@@ -23,12 +23,24 @@ export default async function handler(req, res) {
         break;
       case 'PUT':
         body = JSON.parse(req.body)
+        const reservedQuotas = await prisma.quotas.findMany({
+          where: {
+            AND: [
+              { number: { in: body.numbers } },
+              { raffleId: body.raffleId },
+              { NOT: [{ ownerId: null }] }
+            ]
+          },
+        })
+        if (await reservedQuotas.length > 0) {
+          return res.status(409).json({ message: 'Quota already reserved' })
+        }
         quotas = await prisma.quotas.updateMany({
           where: {
            AND: [
-            { number: { in: body.numbers } },
-            { raffleId: body.raffleId },
-           ]
+              { number: { in: body.numbers } },
+              { raffleId: body.raffleId },
+            ]
           },
           data: {
             status: 'reserved',
