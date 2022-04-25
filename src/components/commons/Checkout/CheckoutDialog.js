@@ -26,15 +26,14 @@ export default function CheckoutDialog({
   isReservingQuotas,
   setIsReservingQuotas,
   setSelectedNumbers,
+  totalPrice,
   ...props
 }) {
   const handleClose = () => {
     setOpen(false);
   };
 
-  const [isUserForm, setIsUserForm] = React.useState(true);
-
-  const totalPrice = selectedNumbers.length * raffle.ticketPrice
+  const [isUserForm, setIsUserForm] = React.useState(true);  
 
   return (
     <div>

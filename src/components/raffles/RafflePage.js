@@ -1,6 +1,6 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { getQuotasStats } from '../../helpers/getQuotasStats';
 import UserForm from '../commons/UserForm/UserForm';
 import { QuotasGrid } from '../quotas/QuotasGrid';
@@ -20,6 +20,9 @@ export const RafflePage = ({
 }) => {
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [openUserForm, setOpenUserForm] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0)
+
+  
 
   useEffect(() => {
     getQuotas(raffle.id)
@@ -28,6 +31,16 @@ export const RafflePage = ({
   if (quotas.length > 0) {
     raffle = getQuotasStats(quotas, raffle);
   }
+
+  useMemo(() => {
+    if (selectedNumbers.length < 5) {
+      setTotalPrice(selectedNumbers.length * raffle.ticketPrice)
+    } else if (selectedNumbers.length < 10) {
+      setTotalPrice(selectedNumbers.length * 3.5)
+    } else {
+      setTotalPrice(selectedNumbers.length * 3)
+    }
+  }, [raffle.ticketPrice, selectedNumbers.length])
 
   const handleNumberClick = (number) => {
     if (selectedNumbers.includes(number)) {
@@ -58,7 +71,7 @@ export const RafflePage = ({
           <Stack spacing={4}>
             <HomeButton />
             <RafflePageCard raffle={raffle} />
-            <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuyClick}/>
+            <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuyClick} totalPrice={totalPrice}/>
             <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
           </Stack>
         </Container>
@@ -76,6 +89,7 @@ export const RafflePage = ({
           isReservingQuotas={isReservingQuotas}
           setIsReservingQuotas={setIsReservingQuotas}
           setSelectedNumbers={setSelectedNumbers}
+          totalPrice={totalPrice}
         />
       }
 
