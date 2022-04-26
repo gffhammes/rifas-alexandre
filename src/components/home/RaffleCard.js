@@ -70,7 +70,7 @@ export default function RaffleCard({ raffleData }) {
           </Box>
         </Stack>
         <Link href={`/rifas/${id}`} passHref>
-          <Button variant="contained" sx={{ width: 'fit-content' }}>Cotas</Button>
+          <Button variant="contained" sx={{ width: 'fit-content' }} >Cotas</Button>
         </Link>
       </Stack>
     </Card>

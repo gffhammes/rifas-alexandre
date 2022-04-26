@@ -55,11 +55,13 @@ export const RafflePage = ({
   const handleBuy = async (values) => {
     const response = await saveUserAndReserveQuotas(values, raffle.id, selectedNumbers);
 
-    if (await response.status === 409) {
-      getQuotas(raffle.id)
-      setOpenUserForm(false);
+    if (response.status === 409) {
       setSelectedNumbers([])
+      setOpenUserForm(false)
+      return;
     }
+
+    setSelectedNumbers(await response.numbers)
   }
 
   return (

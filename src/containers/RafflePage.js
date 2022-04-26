@@ -66,17 +66,45 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 			const userData = await user.json()
 
 			if (user.status === 200) {
-				const quotas = await actions.reserveQuotas(userData.id, raffleId, selectedQuotas);
-				if (quotas.status === 409) {
-					enqueueSnackbar('Cotas indisponíveis. Tente novamente.', { variant: 'error' })
-					actions.setIsReservingQuotas(false);
-					return quotas;
-				}
+				const quotas = await actions.reserveQuotas(userData.id, raffleId, selectedQuotas);				
 				const quotasData = await quotas.json();
+				
 				actions.getQuotas(raffleId);
-				enqueueSnackbar('Cotas reservadas com sucesso!', { variant: 'success' })
+
 				actions.setIsReservingQuotas(false);
-				return await quotasData;
+
+				if (quotas.status === 409) {
+					enqueueSnackbar(`Todas as cotas escolhidas foram reservadas por outro usuário.`, { variant: 'error' })
+					return quotas
+				}
+
+				const getSuccessSnackbar = () => {
+					const reservedNumbers = quotasData.numbers.join(', ')
+					if (quotasData.numbers.length === 1) {
+						return enqueueSnackbar(`A cota ${reservedNumbers} foi reservada com sucesso!`, { variant: 'success' })
+					} else {
+						return enqueueSnackbar(`As cotas ${reservedNumbers} foram reservadas com sucesso!`, { variant: 'success' })
+					}
+				}
+
+				const getAlreadyReservedSnackbar = () => {
+					const alreadyReservedNumbersString = quotasData.alreadyReservedNumbers.join(', ')
+					if (quotasData.alreadyReservedNumbers.length === 1) {
+						return enqueueSnackbar(`A cota ${alreadyReservedNumbersString} foi reservada por outro usuário.`, { variant: 'error' })
+					} else {
+						return enqueueSnackbar(`As cotas ${alreadyReservedNumbersString} foram reservadas por outro usuário.`, { variant: 'error' })
+					}
+				}
+
+				if (quotasData.alreadyReservedNumbers.length > 0) {
+					getSuccessSnackbar()
+					getAlreadyReservedSnackbar()
+				} else {
+					getSuccessSnackbar()
+				}
+
+				actions.setIsReservingQuotas(false);
+				return quotasData;
 			} else {
 				actions.setIsReservingQuotas(false);
 				enqueueSnackbar('Algum erro ocorreu. Tente novamente ou contate o suporte.', { variant: 'error' })

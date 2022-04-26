@@ -10,7 +10,7 @@ export const QuotaButton = ({ quota, selected, setSelected }) => {
       onChange={setSelected}
       sx={{
         width: '100%',
-        backgroundColor: quota.status === 'available' ? 'white' : 'transparent'
+        backgroundColor: quota.status === 'available' ? 'white' : '#ff000040'
       }}
       color="primary"
     >

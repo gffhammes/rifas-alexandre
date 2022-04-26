@@ -1,6 +1,16 @@
 import React from 'react'
 import prisma from '../../../../prisma';
 
+const getNumbersToRemove = (numbers, alreadyReservedQuotas) => {
+  const alreadyReservedNumbers = [];
+
+  alreadyReservedQuotas.forEach((quota) => alreadyReservedNumbers.push(quota.number))
+
+  numbers = numbers.filter(number => !alreadyReservedNumbers.includes(number));
+
+  return { numbers, alreadyReservedNumbers };
+}
+
 export default async function handler(req, res) {
     const { id } = req.query;
     let quotas;
@@ -21,9 +31,10 @@ export default async function handler(req, res) {
         })
         res.json(quotas)
         break;
+        
       case 'PUT':
         body = JSON.parse(req.body)
-        const reservedQuotas = await prisma.quotas.findMany({
+        const alreadyReservedQuotas = await prisma.quotas.findMany({
           where: {
             AND: [
               { number: { in: body.numbers } },
@@ -32,13 +43,17 @@ export default async function handler(req, res) {
             ]
           },
         })
-        if (await reservedQuotas.length > 0) {
-          return res.status(409).json({ message: 'Quota already reserved' })
+
+        if (await alreadyReservedQuotas.length === body.numbers.length) {
+          return res.status(409).json({ message: 'All quotas have been reserved by another user' })
         }
+
+        const { numbers, alreadyReservedNumbers } = getNumbersToRemove(body.numbers, await alreadyReservedQuotas)
+
         quotas = await prisma.quotas.updateMany({
           where: {
            AND: [
-              { number: { in: body.numbers } },
+              { number: { in: numbers } },
               { raffleId: body.raffleId },
             ]
           },
@@ -47,8 +62,9 @@ export default async function handler(req, res) {
             ownerId: body.ownerId,
           },
         })
-        res.json(quotas)
+        res.json({ quotas, alreadyReservedNumbers, numbers })
         break;
+
       default:
         res.status(405).json({ message: 'Method not allowed' })
     }
