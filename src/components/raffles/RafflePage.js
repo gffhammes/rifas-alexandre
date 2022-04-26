@@ -17,6 +17,7 @@ export const RafflePage = ({
   isReservingQuotas,
   setIsReservingQuotas,
   getQuotas,
+  sendConfirmationMail,
 }) => {
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [openUserForm, setOpenUserForm] = useState(false);

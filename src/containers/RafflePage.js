@@ -103,6 +103,8 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 					getSuccessSnackbar()
 				}
 
+				actions.sendConfirmationMail({ userData, quotasData });
+
 				actions.setIsReservingQuotas(false);
 				return quotasData;
 			} else {
@@ -118,6 +120,12 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 
 			actions.setQuotas(await response.json())
 		},
+		async sendConfirmationMail(mailBody) {
+			fetch('/api/mail', {
+				method: 'POST',
+				body: JSON.stringify(mailBody)
+			})
+		}
 	};
 
 	return actions;
