@@ -1,8 +1,10 @@
 const mail = require('@sendgrid/mail');
 
-mail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const handler = (req, res) => {
+  mail.setApiKey(process.env.SENDGRID_API_KEY)
+  console.log(process.env.SENDGRID_API_KEY)
+
   const body = JSON.parse(req.body);
 
   const quotasString = body.quotasData.numbers.join(', ')
