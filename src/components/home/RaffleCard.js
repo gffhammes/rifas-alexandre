@@ -52,11 +52,6 @@ export default function RaffleCard({ raffleData }) {
                 </IconAndType>              
               </Grid>
               <Grid item xs={12} sm={6}>
-                <IconAndType icon={CalendarTodayIcon}>
-                  {new Date(raffleDate).toLocaleString('pt-BR', {  dateStyle: 'short', timeStyle: 'short' })}
-                </IconAndType>              
-              </Grid>
-              <Grid item xs={12} sm={6}>
                 <IconAndType icon={PaidOutlinedIcon}>
                   {currencyBRLMask(ticketPrice)}
                 </IconAndType>              

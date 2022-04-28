@@ -39,10 +39,7 @@ export const RafflePageCard = ({ raffle }) => {
             <Typography variant="body2" color="text.secondary">
               {raffle.description}
             </Typography>
-            <Stack spacing={1.5}>          
-              <IconAndType icon={CalendarTodayIcon}>
-                {new Date(raffle.raffleDate).toLocaleString('pt-BR', {  dateStyle: 'short', timeStyle: 'short' })}
-              </IconAndType>
+            <Stack spacing={1.5}>
               <IconAndType icon={PaidOutlinedIcon}>
                 {currencyBRLMask(raffle.ticketPrice)}
               </IconAndType>
