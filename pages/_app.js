@@ -1,10 +1,17 @@
 import '../src/styles/globals.scss'
-import ContextProvider from '../src/contexts/Context';
 import { SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
 import Router from "next/router"
 import NProgress from "nprogress"
-import { Container } from '@mui/material';
+import { Container, createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({
+  typography: {
+    h1: {
+      fontSize: 48,
+    }
+  },
+});
 
 function MyApp({ Component, pageProps }) {
 
@@ -23,14 +30,14 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
 
-  return (
-    <SnackbarProvider maxSnack={3}>
-      <ContextProvider>
-        <Container sx={{ py: 4, height: '100%' }} maxWidth="md">
-          <Component {...pageProps} />
-        </Container>
-      </ContextProvider>
-    </SnackbarProvider>
+  return (    
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={3}>
+          <Container sx={{ py: 4, height: '100%' }} maxWidth="md">
+            <Component {...pageProps} />
+          </Container>
+      </SnackbarProvider>
+    </ThemeProvider>
   )
 }
 
