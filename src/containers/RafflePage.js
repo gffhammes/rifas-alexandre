@@ -63,20 +63,14 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 		async saveUserAndReserveQuotas(values, raffleId, selectedQuotas) {
 			actions.setIsReservingQuotas(true);
 			const user = await actions.saveUser(values);
-			const userData = await user.json()
 
 			if (user.status === 200) {
-				const quotas = await actions.reserveQuotas(userData.id, raffleId, selectedQuotas);				
+				const userData = await user.json()
+				const quotas = await actions.reserveQuotas(userData.id, raffleId, selectedQuotas);
 				const quotasData = await quotas.json();
 				
 				actions.getQuotas(raffleId);
-
 				actions.setIsReservingQuotas(false);
-
-				if (quotas.status === 409) {
-					enqueueSnackbar(`Todas as cotas escolhidas foram reservadas por outro usuário.`, { variant: 'error' })
-					return quotas
-				}
 
 				const getSuccessSnackbar = () => {
 					const reservedNumbers = quotasData.numbers.join(', ')
@@ -95,18 +89,18 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 						return enqueueSnackbar(`As cotas ${alreadyReservedNumbersString} foram reservadas por outro usuário.`, { variant: 'error' })
 					}
 				}
-
-				if (quotasData.alreadyReservedNumbers.length > 0) {
-					getSuccessSnackbar()
-					getAlreadyReservedSnackbar()
-				} else {
-					getSuccessSnackbar()
+				
+				if (quotas.status === 409) {
+					getAlreadyReservedSnackbar();
+					return { quotasData, quotas }
 				}
 
+				getSuccessSnackbar()
 				actions.sendConfirmationMail({ userData, quotasData });
-
 				actions.setIsReservingQuotas(false);
-				return quotasData;
+				
+				return { quotasData, quotas };
+
 			} else {
 				actions.setIsReservingQuotas(false);
 				enqueueSnackbar('Algum erro ocorreu. Tente novamente ou contate o suporte.', { variant: 'error' })
