@@ -2,7 +2,7 @@ import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import Head from 'next/head';
 import React, { useEffect, useMemo, useState } from 'react'
 import { getQuotasStats } from '../../helpers/getQuotasStats';
-import UserForm from '../commons/UserForm/UserForm';
+import { UserForm } from '../commons/UserForm/UserForm';
 import { QuotasGrid } from '../quotas/QuotasGrid';
 import { RaffleCart } from './RaffleCart';
 import { RafflePageCard } from './RafflePageCard';
