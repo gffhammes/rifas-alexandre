@@ -73,14 +73,12 @@ export const RafflePage = ({
       {
         quotas.length === 0  ?
         <LoadingCircle /> :
-        <Container sx={{ py: 4 }} maxWidth="md">
-          <Stack spacing={4}>
-            <HomeButton />
-            <RafflePageCard raffle={raffle} />
-            <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuyClick} totalPrice={totalPrice}/>
-            <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
-          </Stack>
-        </Container>
+        <Stack spacing={4}>
+          <HomeButton />
+          <RafflePageCard raffle={raffle} />
+          <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuyClick} totalPrice={totalPrice}/>
+          <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
+        </Stack>
       }
 
       {

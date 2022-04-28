@@ -10,7 +10,7 @@ export const HomePage = ({ raffles }) => {
       <Head>
         <title>Rifas</title>
       </Head>
-      <Container maxWidth="md" sx={{ py: 4 }}>
+      <>
         <Typography variant='h1'>Rifas</Typography>
         <Grid container>
           {raffles.map((raffle, index) => {
@@ -21,7 +21,7 @@ export const HomePage = ({ raffles }) => {
             )        
           })}
         </Grid>        
-      </Container>
+      </>
     </>
   )
 }

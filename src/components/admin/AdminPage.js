@@ -1,4 +1,4 @@
-import { Container } from '@mui/material'
+import { Box, Container, Stack, Typography } from '@mui/material'
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react'
 import { LoadingCircle } from '../commons/LoadingCircle';
@@ -60,9 +60,12 @@ export const AdminPage = ({ id }) => {
       <Head>
         <title>Admin</title>
       </Head>
-      <Container>
-        {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
-      </Container>
+      <Box sx={{ height: '100%', overflowY: 'hidden' }}>
+        <Stack spacing={4} sx={{ height: '100%', overflowY: 'hidden' }}>
+          <Typography variant='h1'>Admin</Typography>
+          {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
+        </Stack>
+      </Box>
     </>
   )
 }
