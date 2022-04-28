@@ -18,9 +18,9 @@ export const HomePage = ({ raffles }) => {
               <Grid item key={index} xs={12}>
                 <RaffleCard raffleData={raffle} />
               </Grid>
-            )        
+            )
           })}
-        </Grid>        
+        </Grid>
       </Stack>
     </>
   )
