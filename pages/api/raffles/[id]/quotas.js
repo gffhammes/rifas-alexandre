@@ -44,11 +44,12 @@ export default async function handler(req, res) {
           },
         })
 
-        if (await alreadyReservedQuotas.length === body.numbers.length) {
-          return res.status(409).json({ message: 'All quotas have been reserved by another user' })
+        const { numbers, alreadyReservedNumbers } = getNumbersToRemove(body.numbers, await alreadyReservedQuotas)
+
+        if (await alreadyReservedQuotas.length > 0) {
+          return res.status(409).json({ numbers, alreadyReservedNumbers, message: 'Some quotas had been reserved by another user.' })
         }
 
-        const { numbers, alreadyReservedNumbers } = getNumbersToRemove(body.numbers, await alreadyReservedQuotas)
 
         quotas = await prisma.quotas.updateMany({
           where: {
@@ -62,7 +63,7 @@ export default async function handler(req, res) {
             ownerId: body.ownerId,
           },
         })
-        res.json({ quotas, alreadyReservedNumbers, numbers })
+        res.json({ quotas, numbers })
         break;
 
       default:
