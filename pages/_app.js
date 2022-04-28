@@ -4,6 +4,7 @@ import { SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
 import Router from "next/router"
 import NProgress from "nprogress"
+import { Container } from '@mui/material';
 
 function MyApp({ Component, pageProps }) {
 
@@ -25,7 +26,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <SnackbarProvider maxSnack={3}>
       <ContextProvider>
-        <Component {...pageProps} />
+        <Container sx={{ py: 4, height: '100%' }} maxWidth="md">
+          <Component {...pageProps} />
+        </Container>
       </ContextProvider>
     </SnackbarProvider>
   )

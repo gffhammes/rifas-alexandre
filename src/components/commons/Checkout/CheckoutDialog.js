@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { CheckoutSummary } from './CheckoutSummary';
 import { qrCodePix } from './PixData';
 import Image from 'next/image'
-import LoadingCircle from '../LoadingCircle'
+import { LoadingCircle } from '../LoadingCircle'
 import { QrCode } from './QrCode';
 import { Box, IconButton, Divider, ListItem, ListItemText, Stack, Typography } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';

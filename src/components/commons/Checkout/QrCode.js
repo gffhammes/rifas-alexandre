@@ -1,7 +1,7 @@
 import React from 'react'
 import { qrCodePix } from './PixData';
 import Image from 'next/image'
-import LoadingCircle from '../LoadingCircle'
+import { LoadingCircle } from '../LoadingCircle'
 
 export const QrCode = ({ value }) => {
   const [qrCode, setQrCode] = React.useState()
