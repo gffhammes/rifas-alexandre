@@ -4,8 +4,8 @@ import { DataGrid } from '@mui/x-data-grid';
 const columns = [
   {
     field: 'number',
-    headerName: 'Número',
-    flex: 'min-content',
+    headerName: '#',
+    flex: .3,
   },
   {
     field: 'status',
@@ -15,12 +15,12 @@ const columns = [
   {
     field: 'ownerName',
     headerName: 'Nome',
-    flex: 1,
+    flex: 2,
   },
   {
     field: 'ownerEmail',
     headerName: 'Email',
-    flex: 1,
+    flex: 2,
   },
 ];
 
