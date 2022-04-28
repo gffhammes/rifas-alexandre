@@ -38,6 +38,13 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 		setQuotas(quotas) {
 			dispatch({ type: typeActions.quotas, payload: { quotas } });
 		},
+		async getQuotas(raffleId) {
+			const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
+				method: 'GET',
+			});
+
+			actions.setQuotas(await response.json())
+		},
 		async saveUser(user) {
 			const response = await fetch('/api/users', {
 				method: 'POST',
@@ -106,13 +113,6 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 				enqueueSnackbar('Algum erro ocorreu. Tente novamente ou contate o suporte.', { variant: 'error' })
 			}
 
-		},
-		async getQuotas(raffleId) {
-			const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
-				method: 'GET',
-			});
-
-			actions.setQuotas(await response.json())
 		},
 		async sendConfirmationMail(mailBody) {
 			fetch('/api/mail', {
