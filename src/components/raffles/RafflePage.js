@@ -9,6 +9,7 @@ import { RafflePageCard } from './RafflePageCard';
 import { LoadingCircle } from '../commons/LoadingCircle'
 import { HomeButton } from '../commons/HomeButton';
 import CheckoutDialog from '../commons/Checkout/CheckoutDialog';
+import { getPricesString, getTotalPrice } from '../../helpers/raffleHelper';
 
 export const RafflePage = ({
   raffle,
@@ -29,17 +30,13 @@ export const RafflePage = ({
 
   if (quotas.length > 0) {
     raffle = getQuotasStats(quotas, raffle);
+    raffle = { ...raffle, prices: getPricesString(raffle.ticketPrice, raffle.cumulativeDiscount) }
   }
 
-  useMemo(() => {
-    if (selectedNumbers.length < 5) {
-      setTotalPrice(selectedNumbers.length * raffle.ticketPrice)
-    } else if (selectedNumbers.length < 10) {
-      setTotalPrice(selectedNumbers.length * 3.5)
-    } else {
-      setTotalPrice(selectedNumbers.length * 3)
-    }
-  }, [raffle.ticketPrice, selectedNumbers.length])
+  useEffect(() => {
+    const price = getTotalPrice(raffle.ticketPrice, raffle.cumulativeDiscount, selectedNumbers.length)
+    setTotalPrice(price)
+  }, [selectedNumbers])
 
   const handleNumberClick = (number) => {
     if (selectedNumbers.includes(number)) {

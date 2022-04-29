@@ -41,7 +41,7 @@ export const RafflePageCard = ({ raffle }) => {
             </Typography>
             <Stack spacing={1.5}>
               <IconAndType icon={PaidOutlinedIcon}>
-                {currencyBRLMask(raffle.ticketPrice)}
+                {raffle.prices}
               </IconAndType>
               <IconAndType icon={CheckBoxOutlinedIcon}>
                 {`${raffle.totalQuotas.available}/${raffle.totalQuotas.total} cotas disponíveis`}

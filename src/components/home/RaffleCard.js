@@ -21,7 +21,7 @@ export default function RaffleCard({ raffleData }) {
     name,
     description,
     raffleDate,
-    ticketPrice,
+    prices,
     prize,
     totalQuotas,
   } = raffleData;
@@ -53,7 +53,7 @@ export default function RaffleCard({ raffleData }) {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <IconAndType icon={PaidOutlinedIcon}>
-                  {currencyBRLMask(ticketPrice)}
+                  {prices}
                 </IconAndType>              
               </Grid>
               <Grid item xs={12} sm={6}>
