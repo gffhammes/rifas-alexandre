@@ -1,12 +1,16 @@
-import { Box, Container, Stack, Typography } from '@mui/material'
+import { Box, Button, Container, Stack, Typography } from '@mui/material'
 import Head from 'next/head';
+import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react'
 import { LoadingCircle } from '../commons/LoadingCircle';
+import { AlertDialog } from './AdminConfirmClearDialog';
 import { AdminDataGrid } from './AdminDataGrid';
 
 export const AdminPage = ({ id }) => {
   const [quotas, setQuotas] = useState(null)
   const [users, setUsers] = useState(null)
+  const [openAlert, setOpenAlert] = React.useState(false);
+	const { enqueueSnackbar } = useSnackbar();
 
   const getQuotasData = async () => {
     const response = await fetch(`/api/raffles/${id}/quotas`, {
@@ -31,7 +35,30 @@ export const AdminPage = ({ id }) => {
 
   useEffect(() => {
     quotas?.length === 0 && getQuotasData()
-  }, [quotas])
+  }, [quotas])  
+
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  };
+
+  const handleClose = () => {
+    setOpenAlert(false);
+  };
+
+  const handleClearQuotas = async () => {    
+    try {
+      await fetch(`/api/raffles/${id}/quotas`, {
+        method: 'PUT',
+        body: JSON.stringify({ clearAll: true, raffleId: id }),
+      });
+      getQuotasData();
+      enqueueSnackbar(`Cotas limpas com sucesso!`, { variant: 'success' })
+    } catch (err) {
+      enqueueSnackbar(err.description, { variant: 'error' })
+    }    
+
+    setOpenAlert(false);
+  }
 
   const getRows = () => {
     const newRows = quotas.map((quota) => {
@@ -49,7 +76,7 @@ export const AdminPage = ({ id }) => {
           break;
       }
 
-      return { ...quota, ownerName: owner.name, ownerEmail: owner.email }
+      return { ...quota, ownerName: owner?.name || '-', ownerEmail: owner?.email || '-' }
     })
 
     return newRows
@@ -60,12 +87,14 @@ export const AdminPage = ({ id }) => {
       <Head>
         <title>Admin</title>
       </Head>
-      <Box sx={{ height: '100%', overflowY: 'hidden' }}>
-        <Stack spacing={4} sx={{ height: '100%', overflowY: 'hidden' }}>
-          <Typography variant='h1'>Admin</Typography>
-          {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
-        </Stack>
-      </Box>
+      <Stack spacing={4} sx={{ height: '100%', overflowY: 'hidden' }}>
+        <Typography variant='h1'>Admin</Typography>
+        <Box>
+          <Button onClick={handleOpenAlert}>Limpar cotas</Button>
+        </Box>
+        {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
+      </Stack>
+      <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas}/>
     </>
   )
 }

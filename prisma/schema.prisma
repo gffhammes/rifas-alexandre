@@ -17,15 +17,16 @@ model Users {
 }
 
 model Raffles {
-  id          String   @id @default(cuid())
-  image       String
-  name        String
-  prize       String
-  description String
-  ticketPrice Float
-  raffleDate  DateTime
-  createdAt   DateTime @default(now()) @map("created_at")
-  quotas      Quotas[]
+  id                 String   @id @default(cuid())
+  image              String
+  name               String
+  prize              String
+  description        String
+  ticketPrice        Float
+  raffleDate         DateTime
+  createdAt          DateTime @default(now()) @map("created_at")
+  cumulativeDiscount String?
+  quotas             Quotas[]
 }
 
 model Quotas {
