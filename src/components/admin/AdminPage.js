@@ -95,7 +95,7 @@ export const AdminPage = ({ id }) => {
         </Stack>
         <Stack direction='row' justifyContent='flex-end' spacing={2}>
           <Button onClick={handleOpenAlert}>Limpar cotas</Button>
-          <Export data={getRows()} fileName={new Date().toLocaleDateString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}/>
+          <Export data={getRows()}/>
         </Stack>
         {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
       </Stack>
