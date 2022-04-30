@@ -1,10 +1,12 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material'
 import Head from 'next/head';
+import Script from 'next/script';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react'
 import { LoadingCircle } from '../commons/LoadingCircle';
 import { AlertDialog } from './AdminConfirmClearDialog';
 import { AdminDataGrid } from './AdminDataGrid';
+import { Export } from './Export';
 
 export const AdminPage = ({ id }) => {
   const [quotas, setQuotas] = useState(null)
@@ -61,8 +63,8 @@ export const AdminPage = ({ id }) => {
   }
 
   const getRows = () => {
-    const newRows = quotas.map((quota) => {
-      const owner = users.filter((user => user.id === quota.ownerId))[0]
+    const newRows = quotas?.map((quota) => {
+      const owner = users?.filter((user => user.id === quota.ownerId))[0]
 
       switch (quota.status) {
         case 'available':
@@ -88,10 +90,13 @@ export const AdminPage = ({ id }) => {
         <title>Admin</title>
       </Head>
       <Stack spacing={4} sx={{ height: '100%', overflowY: 'hidden' }}>
-        <Typography variant='h1'>Admin</Typography>
-        <Box>
+        <Stack>
+          <Typography variant='h1'>Admin</Typography>
+        </Stack>
+        <Stack direction='row' justifyContent='flex-end' spacing={2}>
           <Button onClick={handleOpenAlert}>Limpar cotas</Button>
-        </Box>
+          <Export data={getRows()} fileName={new Date().toLocaleDateString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}/>
+        </Stack>
         {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
       </Stack>
       <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas}/>

@@ -1454,6 +1454,11 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
+export-from-json@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/export-from-json/-/export-from-json-1.6.0.tgz#4a79ba2f6f6aacd1d0e843a40f55009f603614a4"
+  integrity sha512-DLHwOGYeGnATM6tOMOWgs9dbzCjO+DwO3YGaha2R6kmLCE5iL8dz5sOywWeJs4P1rhxpdaVILKhCB4mUrTbbGg==
+
 extracted-loader@1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/extracted-loader/-/extracted-loader-1.0.4.tgz#e1a3f1791813c14091a1959e261e23e95dd90115"
