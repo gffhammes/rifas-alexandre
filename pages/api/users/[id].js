@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   switch (req.method) {
     case 'GET':
-      const user = await prisma.users.findMany({
+      const user = await prisma.users.findUnique({
         where: { id }
       })
       res.json(user)
