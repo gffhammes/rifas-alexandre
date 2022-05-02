@@ -28,6 +28,9 @@ export default async function handler(req, res) {
               number: 'asc',
             },
           ],
+          include: {
+            owner: true,
+          },
         })
         res.json(quotas)
         break;

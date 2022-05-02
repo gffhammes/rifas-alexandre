@@ -1,8 +1,21 @@
-import { ToggleButton } from '@mui/material'
+import { Stack, ToggleButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 
+
 export const QuotaButton = ({ quota, selected, setSelected }) => {
-  return (
+
+  const status = () => {
+    switch (quota.status) {
+      case 'reserved':
+        return 'Reservada';
+      case 'bought':
+        return 'Comprada';
+      default:
+        return;
+    }
+  } 
+
+  const Button = () => (
     <ToggleButton
       value={quota.number}
       selected={selected}
@@ -16,5 +29,25 @@ export const QuotaButton = ({ quota, selected, setSelected }) => {
     >
       {quota.number}
     </ToggleButton>
+  )
+
+  return (
+    quota.status === 'available'
+    ? <Button />
+    : <Tooltip
+        title={
+          <Stack>
+            <Typography variant='caption'>{status()}</Typography>
+            <Typography variant='caption'>{quota.owner.name}</Typography>
+          </Stack>
+        }
+        placement="top"
+        arrow
+      >
+          <div>
+            <Button/>
+          </div>
+      </Tooltip>
+   
   )
 }

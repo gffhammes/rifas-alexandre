@@ -10,6 +10,7 @@ import { LoadingCircle } from '../commons/LoadingCircle'
 import { HomeButton } from '../commons/HomeButton';
 import CheckoutDialog from '../commons/Checkout/CheckoutDialog';
 import { getPricesString, getTotalPrice } from '../../helpers/raffleHelper';
+import { getUserById } from '../../services/user';
 
 export const RafflePage = ({
   raffle,
