@@ -18,7 +18,6 @@ export default function Home(props) {
   const quotas = JSON.parse(props.quotas)
 
   raffles = raffles.map((raffle) => {
-    console.log(raffle)
     raffle = getQuotasStats(quotas, raffle);
     raffle = { ...raffle, prices: getPricesString(raffle.ticketPrice, JSON.parse(raffle.cumulativeDiscount)) }
     return raffle

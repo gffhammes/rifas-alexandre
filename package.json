@@ -11,7 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.6.1",
+    "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.78",
     "@mui/material": "^5.6.0",
     "@mui/x-data-grid": "^5.10.0",
@@ -27,6 +27,8 @@
     "qrcode-pix": "4.0.1",
     "react": "18.0.0",
     "react-dom": "18.0.0",
+    "react-drag-drop-files": "^2.3.5",
+    "react-number-format": "^4.9.3",
     "sass": "^1.50.0"
   },
   "devDependencies": {

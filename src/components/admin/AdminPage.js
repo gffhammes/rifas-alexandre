@@ -3,7 +3,9 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react'
+import { getRaffleById } from '../../services/raffle';
 import { LoadingCircle } from '../commons/LoadingCircle';
+import EditRaffleDialog from '../raffles/EditRaffleDialog';
 import { AlertDialog } from './AdminConfirmClearDialog';
 import { AdminDataGrid } from './AdminDataGrid';
 import { Export } from './Export';
@@ -12,7 +14,9 @@ export const AdminPage = ({ id }) => {
   const [quotas, setQuotas] = useState(null)
   const [users, setUsers] = useState(null)
   const [openAlert, setOpenAlert] = React.useState(false);
-	const { enqueueSnackbar } = useSnackbar();
+  const [raffleData, setRaffleData] = React.useState(null);
+  const [openRaffleDialog, setOpenRaffleDialog] = React.useState(false);
+	const { enqueueSnackbar } = useSnackbar();  
 
   const getQuotasData = async () => {
     const response = await fetch(`/api/raffles/${id}/quotas`, {
@@ -45,6 +49,15 @@ export const AdminPage = ({ id }) => {
 
   const handleClose = () => {
     setOpenAlert(false);
+  };
+
+  const handleOpenRaffleDialog = async () => {
+    setRaffleData(await (await getRaffleById(id)).json());
+    setOpenRaffleDialog(true);
+  };
+
+  const handleCloseRaffleDialog = () => {
+    setOpenRaffleDialog(false);
   };
 
   const handleClearQuotas = async () => {    
@@ -95,11 +108,13 @@ export const AdminPage = ({ id }) => {
         </Stack>
         <Stack direction='row' justifyContent='flex-end' spacing={2}>
           <Button onClick={handleOpenAlert}>Limpar cotas</Button>
+          <Button onClick={handleOpenRaffleDialog}>Editar rifa</Button>
           <Export data={getRows()}/>
         </Stack>
         {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
       </Stack>
       <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas}/>
+      <EditRaffleDialog open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffleData}/>
     </>
   )
 }
