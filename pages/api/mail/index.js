@@ -17,6 +17,7 @@ export default async function handler(req, res) {
 
   const data = {
     to: body.userData.email,
+    cc: 'a.d.sanches@gmail.com',
     from: 'a.d.sanches@gmail.com',
     subject: 'Confirmação | Cotas reservadas',
     text: message,
