@@ -10,32 +10,37 @@ import { LoadingCircle } from '../commons/LoadingCircle'
 import { HomeButton } from '../commons/HomeButton';
 import CheckoutDialog from '../commons/Checkout/CheckoutDialog';
 import { getPricesString, getTotalPrice } from '../../helpers/raffleHelper';
+import { useRouter } from 'next/router'
 import { getUserById } from '../../services/user';
 
 export const RafflePage = ({
-  raffle,
   quotas,
   saveUserAndReserveQuotas,
   isReservingQuotas,
   setIsReservingQuotas,
-  getQuotas,
+  getRaffleData,
+  raffleData,
   sendConfirmationMail,
 }) => {
   const [selectedNumbers, setSelectedNumbers] = useState([]);
   const [openUserForm, setOpenUserForm] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0)  
-
+  const [totalPrice, setTotalPrice] = useState(0);
+  
+  const router = useRouter();
+  const { id } = router.query;
+ 
   useEffect(() => {
-    getQuotas(raffle.id)
-  }, [])
+    id && getRaffleData(id)
+  }, [id])
 
-  if (quotas.length > 0) {
-    raffle = getQuotasStats(quotas, raffle);
-    raffle = { ...raffle, prices: getPricesString(raffle.ticketPrice, raffle.cumulativeDiscount) }
+  if (raffleData?.quotas.length > 0) {
+    raffleData = getQuotasStats(raffleData.quotas, raffleData);
+    raffleData = { ...raffleData, prices: getPricesString(raffleData.ticketPrice, JSON.parse(raffleData.cumulativeDiscount)) }
   }
 
   useEffect(() => {
-    const price = getTotalPrice(raffle.ticketPrice, raffle.cumulativeDiscount, selectedNumbers.length)
+    if (!raffleData) return;
+    const price = getTotalPrice(raffleData.ticketPrice, JSON.parse(raffleData.cumulativeDiscount), selectedNumbers.length)
     setTotalPrice(price)
   }, [selectedNumbers])
 
@@ -66,16 +71,16 @@ export const RafflePage = ({
   return (
     <>
       <Head>
-        <title>{raffle.name}</title>
+        <title>{raffleData?.name}</title>
       </Head>
       {
-        quotas.length === 0  ?
+        !raffleData ?
         <LoadingCircle /> :
         <Stack spacing={4}>
           <HomeButton />
-          <RafflePageCard raffle={raffle} />
-          <RaffleCart selectedNumbers={selectedNumbers} raffle={raffle} handleBuy={handleBuyClick} totalPrice={totalPrice}/>
-          <QuotasGrid quotas={quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
+          <RafflePageCard raffle={raffleData} />
+          <RaffleCart selectedNumbers={selectedNumbers} raffle={raffleData} handleBuy={handleBuyClick} totalPrice={totalPrice}/>
+          <QuotasGrid quotas={raffleData.quotas} selectedNumbers={selectedNumbers} handleNumberClick={handleNumberClick} />
         </Stack>
       }
 

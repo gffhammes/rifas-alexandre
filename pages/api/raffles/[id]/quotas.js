@@ -23,11 +23,9 @@ export default async function handler(req, res) {
           where: {
             raffleId: id,
           },
-          orderBy: [
-            {
-              number: 'asc',
-            },
-          ],
+          orderBy: {
+            number: 'asc',
+          },
           include: {
             owner: true,
           },

@@ -10,7 +10,6 @@ import { Export } from './Export';
 
 export const AdminPage = ({ id }) => {
   const [quotas, setQuotas] = useState(null)
-  const [users, setUsers] = useState(null)
   const [openAlert, setOpenAlert] = React.useState(false);
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -22,22 +21,13 @@ export const AdminPage = ({ id }) => {
     setQuotas(await response.json())
   }
 
-  const getUsers = async () => {
-    const response = await fetch(`/api/users`, {
-      method: 'GET',
-    });
-
-    setUsers(await response.json())
-  }
-
   useEffect(() => {
     getQuotasData()
-    getUsers()
   }, [])
 
   useEffect(() => {
     quotas?.length === 0 && getQuotasData()
-  }, [quotas])  
+  }, [quotas])
 
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -64,8 +54,6 @@ export const AdminPage = ({ id }) => {
 
   const getRows = () => {
     const newRows = quotas?.map((quota) => {
-      const owner = users?.filter((user => user.id === quota.ownerId))[0]
-
       switch (quota.status) {
         case 'available':
           quota.status = 'Disponível'
@@ -77,8 +65,7 @@ export const AdminPage = ({ id }) => {
           quota.status = 'Comprada'
           break;
       }
-
-      return { ...quota, ownerName: owner?.name || '-', ownerEmail: owner?.email || '-' }
+      return { ...quota, ownerName: quota.owner.name || '-', ownerEmail: quota.owner.email || '-' }
     })
 
     return newRows
