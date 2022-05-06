@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export function AlertDialog({ openAlert, handleClose, handleClearQuotas }) {
+export function AlertDialog({ openAlert, handleClose, handleClearQuotas, selectedNumbers }) {
   return (
       <Dialog
         open={openAlert}
@@ -19,8 +19,13 @@ export function AlertDialog({ openAlert, handleClose, handleClearQuotas }) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Você está prestes a limpar todas as cotas desta rifa.
-            Deseja continuar?
+            {
+              selectedNumbers.length > 0
+              ? `Você está prestes a limpar as cotas ${selectedNumbers.join(', ')} desta rifa.`
+              : 'Você está prestes a limpar todas as cotas desta rifa.'
+            }
+            <br/><br/>
+            Deseja continuar?            
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -11,6 +11,8 @@ import { Export } from './Export';
 export const AdminPage = ({ id }) => {
   const [quotas, setQuotas] = useState(null)
   const [openAlert, setOpenAlert] = React.useState(false);
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [selectedNumbers, setSelectedNumbers] = React.useState([])
 	const { enqueueSnackbar } = useSnackbar();
 
   const getQuotasData = async () => {
@@ -37,12 +39,19 @@ export const AdminPage = ({ id }) => {
     setOpenAlert(false);
   };
 
+  const handleSelectedRowsChange = (selected) => {
+    setSelectedRows(selected)
+    setSelectedNumbers(selected.map(row => quotas.find(quota => quota.id === row).number))
+  }
+
   const handleClearQuotas = async () => {    
     try {
       await fetch(`/api/raffles/${id}/quotas`, {
         method: 'PUT',
-        body: JSON.stringify({ clearAll: true, raffleId: id }),
-      });
+        body: JSON.stringify({ quotasToDelete: selectedRows, raffleId: id }),
+      }).then(res => console.log(res.json()));
+      setSelectedRows([]);
+      setSelectedNumbers([]);
       getQuotasData();
       enqueueSnackbar(`Cotas limpas com sucesso!`, { variant: 'success' })
     } catch (err) {
@@ -84,9 +93,9 @@ export const AdminPage = ({ id }) => {
           <Button onClick={handleOpenAlert}>Limpar cotas</Button>
           <Export data={getRows()}/>
         </Stack>
-        {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
+        {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} selectedRows={selectedRows} handleSelectedRowsChange={handleSelectedRowsChange} /> : <LoadingCircle />}
       </Stack>
-      <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas}/>
+      <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas} selectedNumbers={selectedNumbers}/>
     </>
   )
 }

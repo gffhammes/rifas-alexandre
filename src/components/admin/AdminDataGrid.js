@@ -24,7 +24,7 @@ const columns = [
   },
 ];
 
-export function AdminDataGrid({ rows }) {
+export function AdminDataGrid({ rows, selectedRows, handleSelectedRowsChange }) {
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <DataGrid
@@ -34,6 +34,9 @@ export function AdminDataGrid({ rows }) {
         rowsPerPageOptions={[rows.length]}
         sx={{ backgroundColor: 'white' }}
         disableSelectionOnClick
+        checkboxSelection
+        onSelectionModelChange={handleSelectedRowsChange}
+        selectionModel={selectedRows}
       />
     </div>
   );
