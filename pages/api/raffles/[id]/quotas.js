@@ -23,11 +23,12 @@ export default async function handler(req, res) {
           where: {
             raffleId: id,
           },
-          orderBy: [
-            {
-              number: 'asc',
-            },
-          ],
+          orderBy: {
+            number: 'asc',
+          },
+          include: {
+            owner: true,
+          },
         })
         res.json(quotas)
         break;
@@ -35,15 +36,27 @@ export default async function handler(req, res) {
       case 'PUT':
         body = JSON.parse(req.body)
 
-        if (body.clearAll) {
+        // if (body.clearAll) {
+        //   quotas = await prisma.quotas.updateMany({
+        //     where: { raffleId: body.raffleId },
+        //     data: {
+        //       status: 'available',
+        //       ownerId: null,
+        //     },
+        //   })
+
+        //   return res.json({ quotas })
+        // }
+
+        if (body.quotasToDelete) {
           quotas = await prisma.quotas.updateMany({
-            where: { raffleId: body.raffleId },
+            where: { id: { in: body.quotasToDelete } },
             data: {
               status: 'available',
               ownerId: null,
             },
           })
-
+  
           return res.json({ quotas })
         }
 

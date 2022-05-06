@@ -12,11 +12,10 @@ import { Export } from './Export';
 
 export const AdminPage = ({ id }) => {
   const [quotas, setQuotas] = useState(null)
-  const [users, setUsers] = useState(null)
   const [openAlert, setOpenAlert] = React.useState(false);
-  const [raffleData, setRaffleData] = React.useState(null);
-  const [openRaffleDialog, setOpenRaffleDialog] = React.useState(false);
-	const { enqueueSnackbar } = useSnackbar();  
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [selectedNumbers, setSelectedNumbers] = React.useState([])
+	const { enqueueSnackbar } = useSnackbar();
 
   const getQuotasData = async () => {
     const response = await fetch(`/api/raffles/${id}/quotas`, {
@@ -26,22 +25,13 @@ export const AdminPage = ({ id }) => {
     setQuotas(await response.json())
   }
 
-  const getUsers = async () => {
-    const response = await fetch(`/api/users`, {
-      method: 'GET',
-    });
-
-    setUsers(await response.json())
-  }
-
   useEffect(() => {
     getQuotasData()
-    getUsers()
   }, [])
 
   useEffect(() => {
     quotas?.length === 0 && getQuotasData()
-  }, [quotas])  
+  }, [quotas])
 
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -51,6 +41,7 @@ export const AdminPage = ({ id }) => {
     setOpenAlert(false);
   };
 
+<<<<<<< HEAD
   const handleOpenRaffleDialog = async () => {
     setRaffleData(await (await getRaffleById(id)).json());
     setOpenRaffleDialog(true);
@@ -59,13 +50,21 @@ export const AdminPage = ({ id }) => {
   const handleCloseRaffleDialog = () => {
     setOpenRaffleDialog(false);
   };
+=======
+  const handleSelectedRowsChange = (selected) => {
+    setSelectedRows(selected)
+    setSelectedNumbers(selected.map(row => quotas.find(quota => quota.id === row).number))
+  }
+>>>>>>> 923e0b23583db1d6a88785a522dc25c3cef0cf1b
 
   const handleClearQuotas = async () => {    
     try {
       await fetch(`/api/raffles/${id}/quotas`, {
         method: 'PUT',
-        body: JSON.stringify({ clearAll: true, raffleId: id }),
-      });
+        body: JSON.stringify({ quotasToDelete: selectedRows, raffleId: id }),
+      }).then(res => console.log(res.json()));
+      setSelectedRows([]);
+      setSelectedNumbers([]);
       getQuotasData();
       enqueueSnackbar(`Cotas limpas com sucesso!`, { variant: 'success' })
     } catch (err) {
@@ -77,8 +76,6 @@ export const AdminPage = ({ id }) => {
 
   const getRows = () => {
     const newRows = quotas?.map((quota) => {
-      const owner = users?.filter((user => user.id === quota.ownerId))[0]
-
       switch (quota.status) {
         case 'available':
           quota.status = 'Disponível'
@@ -90,8 +87,7 @@ export const AdminPage = ({ id }) => {
           quota.status = 'Comprada'
           break;
       }
-
-      return { ...quota, ownerName: owner?.name || '-', ownerEmail: owner?.email || '-' }
+      return { ...quota, ownerName: quota.owner?.name || '-', ownerEmail: quota.owner?.email || '-' }
     })
 
     return newRows
@@ -111,10 +107,14 @@ export const AdminPage = ({ id }) => {
           <Button onClick={handleOpenRaffleDialog}>Editar rifa</Button>
           <Export data={getRows()}/>
         </Stack>
-        {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} /> : <LoadingCircle />}
+        {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} selectedRows={selectedRows} handleSelectedRowsChange={handleSelectedRowsChange} /> : <LoadingCircle />}
       </Stack>
+<<<<<<< HEAD
       <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas}/>
       <EditRaffleDialog open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffleData}/>
+=======
+      <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas} selectedNumbers={selectedNumbers}/>
+>>>>>>> 923e0b23583db1d6a88785a522dc25c3cef0cf1b
     </>
   )
 }

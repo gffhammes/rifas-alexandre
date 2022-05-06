@@ -6,12 +6,14 @@ const typeActions = {
 	loading: 0,
  	isReservingQuotas: 1,
 	quotas: 2,
+	raffleData: 3,
 }
  
 const initialState = {
 	loading: false,
 	isReservingQuotas: false,
 	quotas: [],
+	raffleData: null,
 };
 
 const reducer = (state, action) => {
@@ -22,6 +24,8 @@ const reducer = (state, action) => {
 			return { ...state, isReservingQuotas: action.payload.isReservingQuotas };
 		case typeActions.quotas:
 			return { ...state, quotas: action.payload.quotas };
+		case typeActions.raffleData:
+			return { ...state, raffleData: action.payload.raffleData };
 		default:
 			throw new Error();
 	}
@@ -38,11 +42,19 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 		setQuotas(quotas) {
 			dispatch({ type: typeActions.quotas, payload: { quotas } });
 		},
+		setRaffleData(raffleData) {
+			dispatch({ type: typeActions.raffleData, payload: { raffleData } });
+		},
+		async getRaffleData(raffleId) {			
+			const response = await fetch(`/api/raffles/${raffleId}`, {
+				method: 'GET',
+			});
+			actions.setRaffleData(await response.json())
+		},
 		async getQuotas(raffleId) {
 			const response = await fetch(`/api/raffles/${raffleId}/quotas`, {
 				method: 'GET',
 			});
-
 			actions.setQuotas(await response.json())
 		},
 		async saveUser(user) {
