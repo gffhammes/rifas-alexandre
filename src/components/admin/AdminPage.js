@@ -65,7 +65,7 @@ export const AdminPage = ({ id }) => {
           quota.status = 'Comprada'
           break;
       }
-      return { ...quota, ownerName: quota.owner.name || '-', ownerEmail: quota.owner.email || '-' }
+      return { ...quota, ownerName: quota.owner?.name || '-', ownerEmail: quota.owner?.email || '-' }
     })
 
     return newRows
