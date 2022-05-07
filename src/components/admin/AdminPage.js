@@ -11,27 +11,28 @@ import { AdminDataGrid } from './AdminDataGrid';
 import { Export } from './Export';
 
 export const AdminPage = ({ id }) => {
-  const [quotas, setQuotas] = useState(null)
+  const [raffle, setRaffle] = useState(null)
   const [openAlert, setOpenAlert] = React.useState(false);
+  const [openRaffleDialog, setOpenRaffleDialog] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [selectedNumbers, setSelectedNumbers] = React.useState([])
 	const { enqueueSnackbar } = useSnackbar();
 
-  const getQuotasData = async () => {
-    const response = await fetch(`/api/raffles/${id}/quotas`, {
+  const getRaffleData = async () => {
+    const response = await fetch(`/api/raffles/${id}`, {
       method: 'GET',
     });
 
-    setQuotas(await response.json())
+    setRaffle(await response.json())
   }
 
   useEffect(() => {
-    getQuotasData()
+    getRaffleData()
   }, [])
 
   useEffect(() => {
-    quotas?.length === 0 && getQuotasData()
-  }, [quotas])
+    raffle?.quotas.length === 0 && getRaffleData()
+  }, [raffle])
 
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -41,21 +42,17 @@ export const AdminPage = ({ id }) => {
     setOpenAlert(false);
   };
 
-<<<<<<< HEAD
   const handleOpenRaffleDialog = async () => {
-    setRaffleData(await (await getRaffleById(id)).json());
     setOpenRaffleDialog(true);
   };
 
   const handleCloseRaffleDialog = () => {
     setOpenRaffleDialog(false);
   };
-=======
   const handleSelectedRowsChange = (selected) => {
     setSelectedRows(selected)
-    setSelectedNumbers(selected.map(row => quotas.find(quota => quota.id === row).number))
+    setSelectedNumbers(selected.map(row => raffle?.quotas.find(quota => quota.id === row).number))
   }
->>>>>>> 923e0b23583db1d6a88785a522dc25c3cef0cf1b
 
   const handleClearQuotas = async () => {    
     try {
@@ -75,7 +72,7 @@ export const AdminPage = ({ id }) => {
   }
 
   const getRows = () => {
-    const newRows = quotas?.map((quota) => {
+    const newRows = raffle?.quotas.map((quota) => {
       switch (quota.status) {
         case 'available':
           quota.status = 'Disponível'
@@ -107,14 +104,10 @@ export const AdminPage = ({ id }) => {
           <Button onClick={handleOpenRaffleDialog}>Editar rifa</Button>
           <Export data={getRows()}/>
         </Stack>
-        {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} selectedRows={selectedRows} handleSelectedRowsChange={handleSelectedRowsChange} /> : <LoadingCircle />}
+        {raffle?.quotas.length > 0 ? <AdminDataGrid rows={getRows()} selectedRows={selectedRows} handleSelectedRowsChange={handleSelectedRowsChange} /> : <LoadingCircle />}
       </Stack>
-<<<<<<< HEAD
-      <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas}/>
-      <EditRaffleDialog open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffleData}/>
-=======
+      <EditRaffleDialog open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffle}/>
       <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas} selectedNumbers={selectedNumbers}/>
->>>>>>> 923e0b23583db1d6a88785a522dc25c3cef0cf1b
     </>
   )
 }
