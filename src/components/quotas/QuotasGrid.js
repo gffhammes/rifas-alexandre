@@ -4,8 +4,8 @@ import { QuotaButton } from './QuotaButton'
 
 export const QuotasGrid = ({ quotas, selectedNumbers, handleNumberClick, ...props }) => {
   return (
-    <Box>
-      <Grid container spacing={2}>
+    <Box >
+      <Grid container spacing={2} sx={{ marginBottom: 6 }}>
         {quotas.map((quota) => {
           const isSelected = (selectedNumbers ? selectedNumbers.includes(quota.number) : false);
           return (

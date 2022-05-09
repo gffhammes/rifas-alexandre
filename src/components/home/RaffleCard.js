@@ -28,11 +28,11 @@ export default function RaffleCard({ raffleData }) {
 
   return (
     <Card sx={{ width: '100%', display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
-      <Box sx={{ height: 282, width: { xs: '100%', sm: 557 }, position: 'relative' }}>
+      <Box sx={{ height: 282, width: { xs: '100%', sm: 700, md: 1000 }, position: 'relative' }}>
         <Image
           src={`/images/${image}`}
           layout='fill'
-          objectFit='cover'
+          objectFit='contain'
           alt={name}
         />
       </Box>
@@ -46,17 +46,17 @@ export default function RaffleCard({ raffleData }) {
           </Typography>
           <Box>
             <Grid container spacing={1.5}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <IconAndType icon={EmojiEventsIcon}>
                   {prize}
                 </IconAndType>              
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <IconAndType icon={PaidOutlinedIcon}>
                   {prices}
                 </IconAndType>              
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <IconAndType icon={CheckBoxOutlinedIcon}>
                   {`${totalQuotas.available}/${totalQuotas.total} cotas disponíveis`}
                 </IconAndType>              
