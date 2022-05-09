@@ -21,17 +21,12 @@ export const AdminPage = ({ id }) => {
   const getRaffleData = () => {
     id && fetch(`/api/raffles/${id}`, {
       method: 'GET',
-    }).then(res => res.json()).then(data => setRaffle(data))//.catch(err => console.log(err))
-
+    }).then(res => res.json()).then(data => setRaffle(data)).catch(err => console.log(err))
   }
 
   useEffect(() => {
     id && getRaffleData()
   }, [id])
-
-  useEffect(() => {
-    raffle?.quotas.length === 0 && getRaffleData()
-  }, [raffle])
 
   const handleOpenAlert = () => {
     setOpenAlert(true);
