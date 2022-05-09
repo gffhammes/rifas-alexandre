@@ -102,7 +102,7 @@ export const AdminPage = ({ id }) => {
   
   const handleRaffleDataChange = async (values, image) => {
     setIsSubmitting(true);
-    const imageURL = await handleImageUpload(image);
+    const imageURL = image && await handleImageUpload(image);
     const cumulativeDiscount = [
       {
         rule: 'gte',
@@ -115,8 +115,14 @@ export const AdminPage = ({ id }) => {
         ticketPrice: parseFloat(values.tenQuotasPrice) / 10,
       },
     ]
-    const data = {
-      image: imageURL.secure_url,
+    const data = imageURL ? {
+      image: imageURL?.secure_url,
+      name: values.name,
+      prize: values.prize,
+      description: values.description,
+      ticketPrice: parseFloat(values.ticketPrice),
+      cumulativeDiscount: JSON.stringify(cumulativeDiscount),
+    } : {
       name: values.name,
       prize: values.prize,
       description: values.description,
