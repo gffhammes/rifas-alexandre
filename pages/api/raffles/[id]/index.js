@@ -22,6 +22,7 @@ export default async function handler(req, res) {
       const rafflePut = await prisma.raffles.update({
         where: { id },
         data: {
+          image: body.image,
           name: body.name,
           ticketPrice: body.ticketPrice,
           cumulativeDiscount: body.cumulativeDiscount,

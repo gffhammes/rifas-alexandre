@@ -30,7 +30,7 @@ export default function RaffleCard({ raffleData }) {
     <Card sx={{ width: '100%', display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
       <Box sx={{ height: 282, width: { xs: '100%', sm: 700, md: 1000 }, position: 'relative' }}>
         <Image
-          src={`/images/${image}`}
+          src={image}
           layout='fill'
           objectFit='contain'
           alt={name}

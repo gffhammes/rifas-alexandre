@@ -12,6 +12,7 @@ import { Input } from '../../commons/form/Input'
 import { LoadingCircle } from '../../commons/LoadingCircle';
 import { CurrencyInput } from '../../commons/form/CurrencyInput';
 import { editRaffleData } from '../../../services/raffle';
+import { ImageInput } from './ImageInput';
 
 export function RaffleForm({
   handleClose,
@@ -19,6 +20,11 @@ export function RaffleForm({
   handleRaffleDataChange,
   ...props
 }) {
+  const [image, setImage] = React.useState()
+
+  const handleImageChange = (data) => {
+    setImage(data.secure_url)
+  }
 
   const validate = (values) => {
     const errors = {};
@@ -72,12 +78,15 @@ export function RaffleForm({
           : <Formik
               initialValues={initialValues}
               validate={validate}
-              onSubmit={handleRaffleDataChange}
+              onSubmit={(values) => handleRaffleDataChange(values, image)}
             >
               {(props) => (
                 <Form noValidate>
                   <Box sx={{ my: 2 }}>
                     <Grid container spacing={4}>
+                      <Grid item xs={12}>
+                        <ImageInput handleImageChange={handleImageChange} />
+                      </Grid>
                       <Grid item xs={6}>
                         <Input
                           id="name"

@@ -25,7 +25,7 @@ export const RafflePageCard = ({ raffle }) => {
           }}
         >
           <Image
-            src={`/images/${raffle.image}`}
+            src={raffle.image}
             layout='fill'
             objectFit='contain'
             alt={raffle.name}

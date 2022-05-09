@@ -88,7 +88,7 @@ export const AdminPage = ({ id }) => {
   }
 
   
-  const handleRaffleDataChange = async (values) => {
+  const handleRaffleDataChange = async (values, image) => {
     const cumulativeDiscount = [
       {
         rule: 'gte',
@@ -102,6 +102,7 @@ export const AdminPage = ({ id }) => {
       },
     ]
     const data = {
+      image,
       name: values.name,
       prize: values.prize,
       description: values.description,
