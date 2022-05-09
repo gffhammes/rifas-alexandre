@@ -3,33 +3,30 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react'
+import { editRaffleData, getRaffleById } from '../../services/raffle';
 import { LoadingCircle } from '../commons/LoadingCircle';
+import EditRaffleDialog from '../raffles/EditRaffleDialog';
 import { AlertDialog } from './AdminConfirmClearDialog';
 import { AdminDataGrid } from './AdminDataGrid';
 import { Export } from './Export';
 
 export const AdminPage = ({ id }) => {
-  const [quotas, setQuotas] = useState(null)
+  const [raffle, setRaffle] = useState(null)
   const [openAlert, setOpenAlert] = React.useState(false);
+  const [openRaffleDialog, setOpenRaffleDialog] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [selectedNumbers, setSelectedNumbers] = React.useState([])
 	const { enqueueSnackbar } = useSnackbar();
 
-  const getQuotasData = async () => {
-    const response = await fetch(`/api/raffles/${id}/quotas`, {
+  const getRaffleData = () => {
+    id && fetch(`/api/raffles/${id}`, {
       method: 'GET',
-    });
-
-    setQuotas(await response.json())
+    }).then(res => res.json()).then(data => setRaffle(data)).catch(err => console.log(err))
   }
 
   useEffect(() => {
-    getQuotasData()
-  }, [])
-
-  useEffect(() => {
-    quotas?.length === 0 && getQuotasData()
-  }, [quotas])
+    id && getRaffleData()
+  }, [id])
 
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -39,10 +36,20 @@ export const AdminPage = ({ id }) => {
     setOpenAlert(false);
   };
 
+  const handleOpenRaffleDialog = async () => {
+    setOpenRaffleDialog(true);
+  };
+
+  const handleCloseRaffleDialog = () => {
+    setOpenRaffleDialog(false);
+  };
+
   const handleSelectedRowsChange = (selected) => {
     setSelectedRows(selected)
-    setSelectedNumbers(selected.map(row => quotas.find(quota => quota.id === row).number))
+    setSelectedNumbers(selected.map(row => raffle?.quotas.find(quota => quota.id === row).number))
   }
+
+
 
   const handleClearQuotas = async () => {    
     try {
@@ -62,7 +69,7 @@ export const AdminPage = ({ id }) => {
   }
 
   const getRows = () => {
-    const newRows = quotas?.map((quota) => {
+    const newRows = raffle?.quotas.map((quota) => {
       switch (quota.status) {
         case 'available':
           quota.status = 'Disponível'
@@ -80,6 +87,40 @@ export const AdminPage = ({ id }) => {
     return newRows
   }
 
+  
+  const handleRaffleDataChange = async (values, image) => {
+    const cumulativeDiscount = [
+      {
+        rule: 'gte',
+        trigger: 5,
+        ticketPrice: parseFloat(values.fiveQuotasPrice) / 5,
+      },
+      {
+        rule: 'gte',
+        trigger: 10,
+        ticketPrice: parseFloat(values.tenQuotasPrice) / 10,
+      },
+    ]
+    const data = {
+      image,
+      name: values.name,
+      prize: values.prize,
+      description: values.description,
+      ticketPrice: parseFloat(values.ticketPrice),
+      cumulativeDiscount: JSON.stringify(cumulativeDiscount),
+    }
+    await editRaffleData(raffle.id, data)
+    .then(() => {
+      getRaffleData()
+      enqueueSnackbar(`Rifa alterada com sucesso!`, { variant: 'success' })
+    })
+    .catch((err) => {
+      enqueueSnackbar(err.description, { variant: 'error' })
+    })
+    
+    handleCloseRaffleDialog();    
+  }
+
   return (
     <>
       <Head>
@@ -90,11 +131,13 @@ export const AdminPage = ({ id }) => {
           <Typography variant='h1'>Admin</Typography>
         </Stack>
         <Stack direction='row' justifyContent='flex-end' spacing={2}>
-          <Button onClick={handleOpenAlert}>Limpar cotas</Button>
+          <Button disabled={selectedRows.length === 0} onClick={handleOpenAlert}>Limpar cotas</Button>
+          <Button onClick={handleOpenRaffleDialog}>Editar rifa</Button>
           <Export data={getRows()}/>
         </Stack>
-        {quotas?.length > 0 ? <AdminDataGrid rows={getRows()} selectedRows={selectedRows} handleSelectedRowsChange={handleSelectedRowsChange} /> : <LoadingCircle />}
+        {raffle?.quotas.length > 0 ? <AdminDataGrid rows={getRows()} selectedRows={selectedRows} handleSelectedRowsChange={handleSelectedRowsChange} /> : <LoadingCircle />}
       </Stack>
+      <EditRaffleDialog open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffle} handleRaffleDataChange={handleRaffleDataChange}/>
       <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas} selectedNumbers={selectedNumbers}/>
     </>
   )

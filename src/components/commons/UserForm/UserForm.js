@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Input } from './Input';
+import { Input } from '../form/Input';
 import { Form, Formik, useFormik } from 'formik';
 import { Box, Typography } from '@mui/material';
 

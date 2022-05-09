@@ -28,6 +28,7 @@
     "qrcode-pix": "4.0.1",
     "react": "18.0.0",
     "react-dom": "18.0.0",
+    "react-number-format": "^4.9.3",
     "sass": "^1.50.0"
   },
   "devDependencies": {

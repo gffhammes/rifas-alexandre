@@ -14,9 +14,22 @@ export default async function handler(req, res) {
           },
         },
       })
-      res.json(raffle)
-      break;
+      return res.json(await raffle);
       
+    case 'PUT':
+      const body = JSON.parse(req.body);
+      
+      const rafflePut = await prisma.raffles.update({
+        where: { id },
+        data: {
+          image: body.image,
+          name: body.name,
+          ticketPrice: body.ticketPrice,
+          cumulativeDiscount: body.cumulativeDiscount,
+        },
+      })
+      return res.json(await rafflePut);
+
     default:
       res.status(405).json({ message: 'Method not allowed' })
   }
