@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react'
-import { getRaffleById } from '../../services/raffle';
+import { editRaffleData, getRaffleById } from '../../services/raffle';
 import { LoadingCircle } from '../commons/LoadingCircle';
 import EditRaffleDialog from '../raffles/EditRaffleDialog';
 import { AlertDialog } from './AdminConfirmClearDialog';
@@ -43,10 +43,13 @@ export const AdminPage = ({ id }) => {
   const handleCloseRaffleDialog = () => {
     setOpenRaffleDialog(false);
   };
+
   const handleSelectedRowsChange = (selected) => {
     setSelectedRows(selected)
     setSelectedNumbers(selected.map(row => raffle?.quotas.find(quota => quota.id === row).number))
   }
+
+
 
   const handleClearQuotas = async () => {    
     try {
@@ -84,6 +87,39 @@ export const AdminPage = ({ id }) => {
     return newRows
   }
 
+  
+  const handleRaffleDataChange = async (values) => {
+    const cumulativeDiscount = [
+      {
+        rule: 'gte',
+        trigger: 5,
+        ticketPrice: parseFloat(values.fiveQuotasPrice) / 5,
+      },
+      {
+        rule: 'gte',
+        trigger: 10,
+        ticketPrice: parseFloat(values.tenQuotasPrice) / 10,
+      },
+    ]
+    const data = {
+      name: values.name,
+      prize: values.prize,
+      description: values.description,
+      ticketPrice: parseFloat(values.ticketPrice),
+      cumulativeDiscount: JSON.stringify(cumulativeDiscount),
+    }
+    await editRaffleData(raffle.id, data)
+    .then(() => {
+      getRaffleData()
+      enqueueSnackbar(`Rifa alterada com sucesso!`, { variant: 'success' })
+    })
+    .catch((err) => {
+      enqueueSnackbar(err.description, { variant: 'error' })
+    })
+    
+    handleCloseRaffleDialog();    
+  }
+
   return (
     <>
       <Head>
@@ -100,7 +136,7 @@ export const AdminPage = ({ id }) => {
         </Stack>
         {raffle?.quotas.length > 0 ? <AdminDataGrid rows={getRows()} selectedRows={selectedRows} handleSelectedRowsChange={handleSelectedRowsChange} /> : <LoadingCircle />}
       </Stack>
-      <EditRaffleDialog open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffle}/>
+      <EditRaffleDialog open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffle} handleRaffleDataChange={handleRaffleDataChange}/>
       <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas} selectedNumbers={selectedNumbers}/>
     </>
   )

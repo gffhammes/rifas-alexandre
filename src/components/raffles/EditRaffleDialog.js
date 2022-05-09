@@ -9,13 +9,14 @@ export default function EditRaffleDialog({
   open,
   handleClose,
   raffleData,
+  handleRaffleDataChange,
   ...props
 }) {
   return (
     <Dialog open={open} fullWidth>
       <DialogTitle>Editar rifa</DialogTitle>
       <DialogContent sx={{ overflowY: 'hidden', height: '100%' }}>
-        <RaffleForm handleClose={handleClose} raffleData={raffleData}/>        
+        <RaffleForm handleClose={handleClose} raffleData={raffleData} handleRaffleDataChange={handleRaffleDataChange}/>        
       </DialogContent>
     </Dialog>
   );

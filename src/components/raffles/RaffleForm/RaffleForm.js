@@ -10,13 +10,13 @@ import { Form, Formik, useFormik } from 'formik';
 import { Box, Grid, Typography } from '@mui/material';
 import { Input } from '../../commons/form/Input'
 import { LoadingCircle } from '../../commons/LoadingCircle';
-import { TicketDiscount } from './TicketDiscount';
 import { CurrencyInput } from '../../commons/form/CurrencyInput';
 import { editRaffleData } from '../../../services/raffle';
 
 export function RaffleForm({
   handleClose,
   raffleData,
+  handleRaffleDataChange,
   ...props
 }) {
 
@@ -64,31 +64,6 @@ export function RaffleForm({
     tenQuotasPrice: getTenQuotasPrice(),
   }
 
-  const handleSubmit = async (values) => {
-    const cumulativeDiscount = [
-      {
-        rule: 'gte',
-        trigger: 5,
-        ticketPrice: parseFloat(values.fiveQuotasPrice) / 5,
-      },
-      {
-        rule: 'gte',
-        trigger: 10,
-        ticketPrice: parseFloat(values.tenQuotasPrice) / 10,
-      },
-    ]
-    const data = {
-      name: values.name,
-      prize: values.prize,
-      description: values.description,
-      ticketPrice: parseFloat(values.ticketPrice),
-      cumulativeDiscount: JSON.stringify(cumulativeDiscount),
-    }
-    // console.log(data)
-    editRaffleData(raffleData.id, data).then(res => console.log(res.json()))
-    // handleClose();
-  }
-
   return (
     <Box sx={{ height: '100%', overflowY: 'auto'}}>
         {
@@ -97,7 +72,7 @@ export function RaffleForm({
           : <Formik
               initialValues={initialValues}
               validate={validate}
-              onSubmit={handleSubmit}
+              onSubmit={handleRaffleDataChange}
             >
               {(props) => (
                 <Form noValidate>
