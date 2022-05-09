@@ -1,5 +1,6 @@
 import { TextField } from '@mui/material';
-import React from 'react'
+import { useField } from 'formik';
+import React, { useCallback } from 'react'
 import NumberFormat from 'react-number-format';
 
 const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
@@ -23,21 +24,34 @@ const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, r
       isNumericString
       prefix="R$ "
       decimalScale={2}
-      fixedDecimalScale={true}
+      fixedDecimalScale={2}
     />
   );
 });
 
-export const CurrencyInput = ({ label, value, handleChange }) => {
+export const CurrencyInput = ({ label, name, ...props }) => {  
+  const [field, meta, helpers] = useField(name);
+
+	const getHelperText = useCallback(() => {
+		if (Boolean(meta.touched) && Boolean(meta.error)) {
+			return meta.error;
+		}
+
+		if (props.helperText) {
+			return props.helperText;
+		}
+	}, [meta.error, meta.touched, props.helperText]);
+
   return (
     <TextField
-      label={label}
-      value={value}
-      onChange={handleChange}
-      variant="outlined"
+      label={label}      
       InputProps={{
         inputComponent: NumberFormatCustom,
       }}
+      error={Boolean(meta.touched) && Boolean(meta.error)}
+			helperText={getHelperText()}
+      {...field}
+      {...props}
     />
   )
 }

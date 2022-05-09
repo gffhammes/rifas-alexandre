@@ -94,7 +94,7 @@ export const AdminPage = ({ id }) => {
           <Typography variant='h1'>Admin</Typography>
         </Stack>
         <Stack direction='row' justifyContent='flex-end' spacing={2}>
-          <Button onClick={handleOpenAlert}>Limpar cotas</Button>
+          <Button disabled={selectedRows.length === 0} onClick={handleOpenAlert}>Limpar cotas</Button>
           <Button onClick={handleOpenRaffleDialog}>Editar rifa</Button>
           <Export data={getRows()}/>
         </Stack>

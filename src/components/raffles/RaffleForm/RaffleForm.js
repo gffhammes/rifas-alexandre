@@ -11,6 +11,8 @@ import { Box, Grid, Typography } from '@mui/material';
 import { Input } from '../../commons/form/Input'
 import { LoadingCircle } from '../../commons/LoadingCircle';
 import { TicketDiscount } from './TicketDiscount';
+import { CurrencyInput } from '../../commons/form/CurrencyInput';
+import { editRaffleData } from '../../../services/raffle';
 
 export function RaffleForm({
   handleClose,
@@ -18,35 +20,73 @@ export function RaffleForm({
   ...props
 }) {
 
-  console.log(raffleData)
-
   const validate = (values) => {
     const errors = {};
 
     if (!values.name) {
       errors.name = '*Obrigatório'
     }
-
-    if (!values.email) {
-      errors.email = '*Obrigatório';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Email inválido';
+    
+    if (!values.prize) {
+      errors.prize = '*Obrigatório'
     }
     
-    if (!values.phone) {
-      errors.phone = '*Obrigatório';
+    if (!values.description) {
+      errors.description = '*Obrigatório'
     }
-
+    
+    if (!values.ticketPrice) {
+      errors.ticketPrice = '*Obrigatório'
+    }
+    
     return errors;
   }
 
+  const cumulativeDiscount = React.useMemo(() => JSON.parse(raffleData.cumulativeDiscount), [raffleData.cumulativeDiscount])
+
+  const getFiveQuotasPrice = () => {
+    const fiveQuotasDiscount = cumulativeDiscount.find(discount => discount.trigger === 5)
+    return fiveQuotasDiscount.trigger * fiveQuotasDiscount.ticketPrice;
+  }
+
+  const getTenQuotasPrice = () => {
+    const tenQuotasDiscount = cumulativeDiscount.find(discount => discount.trigger === 10)
+    return tenQuotasDiscount.trigger * tenQuotasDiscount.ticketPrice;
+  }
+
   const initialValues = {
-    image: raffleData.image,
+    // image: raffleData.image,
     name: raffleData.name,
     prize: raffleData.prize,
     description: raffleData.description,
     ticketPrice: raffleData.ticketPrice,
-    // cumulativeDiscount: '',
+    fiveQuotasPrice: getFiveQuotasPrice(),
+    tenQuotasPrice: getTenQuotasPrice(),
+  }
+
+  const handleSubmit = async (values) => {
+    const cumulativeDiscount = [
+      {
+        rule: 'gte',
+        trigger: 5,
+        ticketPrice: parseFloat(values.fiveQuotasPrice) / 5,
+      },
+      {
+        rule: 'gte',
+        trigger: 10,
+        ticketPrice: parseFloat(values.tenQuotasPrice) / 10,
+      },
+    ]
+    const data = {
+      name: values.name,
+      prize: values.prize,
+      description: values.description,
+      ticketPrice: parseFloat(values.ticketPrice),
+      cumulativeDiscount: JSON.stringify(cumulativeDiscount),
+    }
+    // console.log(data)
+    editRaffleData(raffleData.id, data).then(res => console.log(res.json()))
+    // handleClose();
   }
 
   return (
@@ -57,59 +97,53 @@ export function RaffleForm({
           : <Formik
               initialValues={initialValues}
               validate={validate}
-              onSubmit={async (values) => {
-                await handleBuy(values)
-                setIsUserForm(false)
-              }}
+              onSubmit={handleSubmit}
             >
               {(props) => (
-                <Form onSubmit={props.handleSubmit} noValidate>
-                  <Box>
-                    <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Input
-                        id="image"
-                        name="image"
-                        label="Imagem"
-                        type="text"
-                        fullWidth
-                        required
-                        sx={{ mt: 2 }}
-                      />
+                <Form noValidate>
+                  <Box sx={{ my: 2 }}>
+                    <Grid container spacing={4}>
+                      <Grid item xs={6}>
+                        <Input
+                          id="name"
+                          name="name"
+                          label="Título"
+                          type="text"
+                          fullWidth
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Input
+                          id="prize"
+                          name="prize"
+                          label="Prêmio"
+                          type="text"
+                          fullWidth
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Input
+                          id="description"
+                          name="description"
+                          label="Descrição"
+                          type="text"
+                          fullWidth
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <CurrencyInput label='1 cota por' name='ticketPrice' required />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <CurrencyInput label='5 cotas por' name='fiveQuotasPrice' />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <CurrencyInput label='10 cotas por' name='tenQuotasPrice' />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                      <Input
-                        id="name"
-                        name="name"
-                        label="Título"
-                        type="text"
-                        fullWidth
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Input
-                        id="prize"
-                        name="prize"
-                        label="Prêmio"
-                        type="text"
-                        fullWidth
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Input
-                        id="description"
-                        name="description"
-                        label="Descrição"
-                        type="text"
-                        fullWidth
-                        required
-                      />
-                    </Grid>
-                  </Grid>
                   </Box>
-                  <TicketDiscount ticketPrice={props.values.ticketPrice} />
                   <DialogActions>
                     <Button onClick={handleClose}>Cancelar</Button>
                     <LoadingButton loading={false} variant='contained' type='submit'>CONTINUAR</LoadingButton>
