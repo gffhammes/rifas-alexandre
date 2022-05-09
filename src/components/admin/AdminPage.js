@@ -18,17 +18,16 @@ export const AdminPage = ({ id }) => {
   const [selectedNumbers, setSelectedNumbers] = React.useState([])
 	const { enqueueSnackbar } = useSnackbar();
 
-  const getRaffleData = async () => {
-    const response = await fetch(`/api/raffles/${id}`, {
+  const getRaffleData = () => {
+    id && fetch(`/api/raffles/${id}`, {
       method: 'GET',
-    });
+    }).then(res => res.json()).then(data => setRaffle(data))//.catch(err => console.log(err))
 
-    setRaffle(await response.json())
   }
 
   useEffect(() => {
-    getRaffleData()
-  }, [])
+    id && getRaffleData()
+  }, [id])
 
   useEffect(() => {
     raffle?.quotas.length === 0 && getRaffleData()

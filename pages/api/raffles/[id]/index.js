@@ -14,8 +14,7 @@ export default async function handler(req, res) {
           },
         },
       })
-      res.json(raffle)
-      break;
+      return res.json(await raffle);
       
     default:
       res.status(405).json({ message: 'Method not allowed' })
