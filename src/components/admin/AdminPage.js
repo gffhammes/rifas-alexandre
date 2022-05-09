@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react'
 import { editRaffleData, getRaffleById } from '../../services/raffle';
 import { LoadingCircle } from '../commons/LoadingCircle';
-import EditRaffleDialog from '../raffles/EditRaffleDialog';
+import EditRaffleDialog from './RaffleForm/EditRaffleDialog';
 import { AlertDialog } from './AdminConfirmClearDialog';
 import { AdminDataGrid } from './AdminDataGrid';
 import { Export } from './Export';
@@ -17,6 +17,7 @@ export const AdminPage = ({ id }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [selectedNumbers, setSelectedNumbers] = React.useState([])
 	const { enqueueSnackbar } = useSnackbar();
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
 
   const getRaffleData = () => {
     id && fetch(`/api/raffles/${id}`, {
@@ -48,8 +49,6 @@ export const AdminPage = ({ id }) => {
     setSelectedRows(selected)
     setSelectedNumbers(selected.map(row => raffle?.quotas.find(quota => quota.id === row).number))
   }
-
-
 
   const handleClearQuotas = async () => {    
     try {
@@ -87,8 +86,23 @@ export const AdminPage = ({ id }) => {
     return newRows
   }
 
+  const handleImageUpload = async (uploadData) => {
+    const formData = new FormData();
+
+    formData.append('file', uploadData)
+    formData.append('upload_preset', 'rifas-alexandre')
+
+    const data = await fetch('https://api.cloudinary.com/v1_1/de5rrszh7/image/upload', {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json());
+
+    return data;
+  }
   
   const handleRaffleDataChange = async (values, image) => {
+    setIsSubmitting(true);
+    const imageURL = await handleImageUpload(image);
     const cumulativeDiscount = [
       {
         rule: 'gte',
@@ -102,7 +116,7 @@ export const AdminPage = ({ id }) => {
       },
     ]
     const data = {
-      image,
+      image: imageURL.secure_url,
       name: values.name,
       prize: values.prize,
       description: values.description,
@@ -117,8 +131,9 @@ export const AdminPage = ({ id }) => {
     .catch((err) => {
       enqueueSnackbar(err.description, { variant: 'error' })
     })
+    setIsSubmitting(false);
     
-    handleCloseRaffleDialog();    
+    handleCloseRaffleDialog();
   }
 
   return (
@@ -137,7 +152,7 @@ export const AdminPage = ({ id }) => {
         </Stack>
         {raffle?.quotas.length > 0 ? <AdminDataGrid rows={getRows()} selectedRows={selectedRows} handleSelectedRowsChange={handleSelectedRowsChange} /> : <LoadingCircle />}
       </Stack>
-      <EditRaffleDialog open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffle} handleRaffleDataChange={handleRaffleDataChange}/>
+      <EditRaffleDialog isSubmitting={isSubmitting} handleImageUpload={handleImageUpload} open={openRaffleDialog} handleClose={handleCloseRaffleDialog} raffleData={raffle} handleRaffleDataChange={handleRaffleDataChange}/>
       <AlertDialog openAlert={openAlert} handleClose={handleClose} handleClearQuotas={handleClearQuotas} selectedNumbers={selectedNumbers}/>
     </>
   )

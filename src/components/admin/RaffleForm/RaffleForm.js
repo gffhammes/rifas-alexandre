@@ -7,24 +7,22 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Form, Formik, useFormik } from 'formik';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import { Input } from '../../commons/form/Input'
 import { LoadingCircle } from '../../commons/LoadingCircle';
 import { CurrencyInput } from '../../commons/form/CurrencyInput';
 import { editRaffleData } from '../../../services/raffle';
 import { ImageInput } from './ImageInput';
+import Image from 'next/image';
 
 export function RaffleForm({
   handleClose,
   raffleData,
   handleRaffleDataChange,
+  isSubmitting,
   ...props
 }) {
   const [image, setImage] = React.useState()
-
-  const handleImageChange = (data) => {
-    setImage(data.secure_url)
-  }
 
   const validate = (values) => {
     const errors = {};
@@ -70,6 +68,10 @@ export function RaffleForm({
     tenQuotasPrice: getTenQuotasPrice(),
   }
 
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0])
+  }
+
   return (
     <Box sx={{ height: '100%', overflowY: 'auto'}}>
         {
@@ -84,8 +86,21 @@ export function RaffleForm({
                 <Form noValidate>
                   <Box sx={{ my: 2 }}>
                     <Grid container spacing={4}>
-                      <Grid item xs={12}>
-                        <ImageInput handleImageChange={handleImageChange} />
+                      <Grid item container xs={12}>
+                        <Grid item xs={6}>                            
+                          <Box sx={{ position: 'relative', height: '10rem', width: '100%' }}>
+                            <Image
+                              src={raffleData.image}
+                              alt={raffleData.name}
+                              layout='fill'
+                              objectFit='contain'
+                            />
+                          </Box>                          
+                        </Grid>
+                        <Grid item xs={6}>
+                          <ImageInput handleImageChange={handleImageChange}/>
+                          <Typography>{image ? image.name : 'Selecione uma imagem'}</Typography>
+                        </Grid>
                       </Grid>
                       <Grid item xs={6}>
                         <Input
@@ -130,7 +145,7 @@ export function RaffleForm({
                   </Box>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancelar</Button>
-                    <LoadingButton loading={false} variant='contained' type='submit'>CONTINUAR</LoadingButton>
+                    <LoadingButton loading={isSubmitting} variant='contained' type='submit'>CONTINUAR</LoadingButton>
                   </DialogActions>
                 </Form>
               )}
