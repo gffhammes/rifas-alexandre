@@ -27,14 +27,6 @@ export const CheckoutAccountData = ({ totalPrice, sx }) => {
       label: 'Chave pix',
       data: pixData.key,
     },
-    {
-      label: 'Pag seguro R$ 17,50',
-      data: 'https://pag.ae/7YcW99CQo',
-    },
-    {
-      label: 'Pag seguro R$ 30,00',
-      data: 'https://pag.ae/7YcW6LY2K',
-    },
   ]
 
   return (
