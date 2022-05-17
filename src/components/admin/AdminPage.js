@@ -58,9 +58,10 @@ export const AdminPage = ({ id }) => {
       }).then(res => console.log(res.json()));
       setSelectedRows([]);
       setSelectedNumbers([]);
-      getQuotasData();
+      getRaffleData();
       enqueueSnackbar(`Cotas limpas com sucesso!`, { variant: 'success' })
     } catch (err) {
+      console.log(err)
       enqueueSnackbar(err.description, { variant: 'error' })
     }    
 
