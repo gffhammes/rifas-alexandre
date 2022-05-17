@@ -1,7 +1,7 @@
 import { IconButton, Stack, Typography } from '@mui/material'
 import React from 'react'
 import Link from 'next/link'
-import { CopyToClipboard } from '../CopyToClipboard/CopyToClipboard';
+import { CopyToClipboard } from '../../commons/CopyToClipboard/CopyToClipboard';
 import { pixData, qrCodePix } from './PixData'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LaunchIcon from '@mui/icons-material/Launch';

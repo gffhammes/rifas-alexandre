@@ -10,7 +10,6 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { CheckoutAccountData } from './CheckoutAccountData';
 import { QrCode } from './QrCode';
 import { Stack } from '@mui/material';
-import { UserForm } from '../UserForm/UserForm';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 import { CheckoutSummary } from './CheckoutSummary';
 
