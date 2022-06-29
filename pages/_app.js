@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Router from "next/router"
 import NProgress from "nprogress"
 import { Container, createTheme, ThemeProvider } from '@mui/material';
+import { UserProvider } from '@auth0/nextjs-auth0';
 
 const theme = createTheme({
   typography: {
@@ -30,14 +31,16 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
 
-  return (    
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider maxSnack={3}>
-          <Container sx={{ py: 4, height: '100%' }} maxWidth="md">
-            <Component {...pageProps} />
-          </Container>
-      </SnackbarProvider>
-    </ThemeProvider>
+  return (
+    <UserProvider>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider maxSnack={3}>
+            <Container sx={{ py: 4, height: '100%' }} maxWidth="md">
+              <Component {...pageProps} />
+            </Container>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </UserProvider>
   )
 }
 

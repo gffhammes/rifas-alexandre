@@ -4,6 +4,9 @@ const nextConfig = {
   images: {
     domains: ['res.cloudinary.com'],
   },
+  env: {    
+    ADMINS_MAILS: "gffhammes@gmail.com, a.d.sanches@gmail.com",
+  }
 }
 
 module.exports = nextConfig

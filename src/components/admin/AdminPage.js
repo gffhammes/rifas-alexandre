@@ -9,6 +9,7 @@ import EditRaffleDialog from './RaffleForm/EditRaffleDialog';
 import { AlertDialog } from './AdminConfirmClearDialog';
 import { AdminDataGrid } from './AdminDataGrid';
 import { Export } from './Export';
+import Link from 'next/link';
 
 export const AdminPage = ({ id }) => {
   const [raffle, setRaffle] = useState(null)
@@ -149,8 +150,13 @@ export const AdminPage = ({ id }) => {
         <title>Admin</title>
       </Head>
       <Stack spacing={4} sx={{ height: '100%', overflowY: 'hidden' }}>
-        <Stack>
+      <Stack direction='row' justifyContent='space-between' alignItems='center'>          
           <Typography variant='h1'>Admin</Typography>
+          <Link href='/api/auth/logout'>
+            <a>
+              <Button variant='outlined'>Logout</Button>
+            </a>
+          </Link>
         </Stack>
         <Stack direction='row' justifyContent='flex-end' spacing={2}>
           <Button disabled={selectedRows.length === 0} onClick={handleOpenAlert}>Limpar cotas</Button>
