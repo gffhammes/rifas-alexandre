@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  name      String
+  email     String   @unique
+  phone     Int
+  quotas    Quotas[]
+}
+
+model Raffles {
+  id                 String   @id @default(cuid())
+  image              String
+  name               String
+  prize              String
+  description        String
+  ticketPrice        Float
+  raffleDate         DateTime
+  createdAt          DateTime @default(now()) @map("created_at")
+  cumulativeDiscount String?
+  quotas             Quotas[]
+}
+
+model Quotas {
+  id        String   @id @default(cuid())
+  number    Int
+  raffleId  String?
+  status    String
+  ownerId   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  owner     Users?   @relation(fields: [ownerId], references: [id])
+  raffle    Raffles? @relation(fields: [raffleId], references: [id])
+}
+
+model Transactions {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  raffleId  String?
+  ownerId   String?
+  quotas    String[]
+  status    String
+}
