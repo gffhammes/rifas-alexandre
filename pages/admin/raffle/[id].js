@@ -16,10 +16,7 @@ const Admin = () => {
   const { user, error, isLoading } = useUser();
 
   const admins = adminsMails.split(',')
-
   const isAdmin = admins.includes(user?.email)
-  
-  console.log(adminsMails, admins, isAdmin)
 
   if (isLoading) {
     return <></>
