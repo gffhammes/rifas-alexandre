@@ -54,6 +54,7 @@ export const getPricesString = (ticketPrice, cumulativeDiscount) => {
   price = basePrice;
 
   cumulativeDiscount.forEach((discount) => {
+    if (discount.ticketPrice === null) return;
     price = price + ' / ' + discount.trigger + ' por ' + currencyBRLMask(discount.trigger * discount.ticketPrice) 
   })
 
