@@ -16,6 +16,10 @@ export const getTotalPrice = (ticketPrice, cumulativeDiscount, quantity) => {
   cumulativeDiscount.some((discount, key) => {
     switch (discount.rule) {
       case 'gt':
+        if (discount.ticketPrice === null) {
+          index = -1;
+          return;
+        }
         if (isGreaterThan(quantity, discount.trigger)) {
           index = key;
         } else {
@@ -23,6 +27,10 @@ export const getTotalPrice = (ticketPrice, cumulativeDiscount, quantity) => {
         }
         break;
       case 'gte':
+        if (discount.ticketPrice === null) {
+          index = -1;
+          return;
+        }
         if (isGreaterThanOrEqual(quantity, discount.trigger)) {
           index = key;
         } else {

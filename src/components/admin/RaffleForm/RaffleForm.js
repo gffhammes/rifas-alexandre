@@ -102,7 +102,7 @@ export function RaffleForm({
                           <Typography>{image ? image.name : 'Selecione uma imagem'}</Typography>
                         </Grid>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item xs={12} md={6}>
                         <Input
                           id="name"
                           name="name"
@@ -112,7 +112,7 @@ export function RaffleForm({
                           required
                         />
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item xs={12} md={6}>
                         <Input
                           id="prize"
                           name="prize"
@@ -132,13 +132,13 @@ export function RaffleForm({
                           required
                         />
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={12} md={4}>
                         <CurrencyInput label='1 cota por' name='ticketPrice' required />
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={12} md={4}>
                         <CurrencyInput label='5 cotas por' name='fiveQuotasPrice' />
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={12} md={4}>
                         <CurrencyInput label='10 cotas por' name='tenQuotasPrice' />
                       </Grid>
                     </Grid>
