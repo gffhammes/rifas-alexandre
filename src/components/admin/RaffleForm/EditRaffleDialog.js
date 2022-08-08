@@ -16,7 +16,7 @@ export default function EditRaffleDialog({
   return (
     <Dialog open={open} fullWidth>
       <DialogTitle>Editar rifa</DialogTitle>
-      <DialogContent sx={{ overflowY: 'hidden', height: '100%' }}>
+      <DialogContent sx={{ overflowY: 'auto', height: '100%' }}>
         <RaffleForm isSubmitting={isSubmitting} handleClose={handleClose} raffleData={raffleData} handleRaffleDataChange={handleRaffleDataChange}/>        
       </DialogContent>
     </Dialog>

@@ -73,7 +73,7 @@ export function RaffleForm({
   }
 
   return (
-    <Box sx={{ height: '100%', overflowY: 'auto'}}>
+    <Box sx={{ height: '100%', overflowY: 'auto' }}>
         {
           !raffleData
           ? <LoadingCircle />
