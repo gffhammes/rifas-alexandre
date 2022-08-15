@@ -1,30 +1,36 @@
-const mail = require('@sendgrid/mail');
-
 export default async function handler(req, res) {
-  mail.setApiKey(process.env.SENDGRID_API_KEY)
+  require('dotenv').config()
 
-  const body = JSON.parse(req.body);
+  const email = 'contatos.sites@hotmail.com';
 
-  const quotasString = body.quotasData.numbers.join(', ')
-  
-  const message = `
-    Nome: ${body.userData.name}\r\n
-    Email: ${body.userData.email}\r\n
-    Telefone: ${body.userData.phone}\r\n
+  const body = JSON.parse(req.body)
 
-    Cotas reservadas: ${quotasString}\r\n
-  `
-
-  const data = {
-    to: body.userData.email,
-    cc: 'a.d.sanches@gmail.com',
-    from: 'a.d.sanches@gmail.com',
-    subject: 'Confirmação | Cotas reservadas',
-    text: message,
-    html: message.replace(/\r\n/g, '<br>')
+  let nodemailer = require('nodemailer')
+  const transporter = nodemailer.createTransport({
+    service: 'Hotmail',
+    secureConnection: false,
+    auth: {
+      user: email,
+      pass: process.env.password,
+    },
+    tls: {
+        ciphers:'SSLv3'
+    },
+  })
+  const mailData = {
+    from: email,
+    to: body.recipientMail,
+    subject: body.subject,
+    text: body.message + " | Sent from: " + email,
+    html: `<div>${body.message}</div>`
   }
 
-  await mail.send(data).then(res => console.log(res)).catch(err => console.log(err));
-
-  res.status(200).json({ status: 'Ok' })
+  try {
+    await transporter.sendMail(mailData)
+    res.status(200).end();
+  } catch(error) {
+    console.log(error)
+    res.json(error);
+    res.status(405).end();
+  }
 }

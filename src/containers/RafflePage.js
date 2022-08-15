@@ -126,10 +126,30 @@ const RaffleActions = (dispatch, enqueueSnackbar) => {
 			}
 
 		},
-		async sendConfirmationMail(mailBody) {
+		async sendConfirmationMail(mailBody) {			
+			const quotasString = mailBody.quotasData.numbers.join(', ')
+			
+			const message = `
+				<ul>
+					<li>Nome: ${mailBody.userData.name}</li>
+					<li>Email: ${mailBody.userData.email}</li>
+					<li>Telefone: ${mailBody.userData.phone}</li>
+					<br />
+					<li>Cotas reservadas: ${quotasString}</li>				
+				</ul>
+			`
+
+			const body = {
+				subject: 'Cotas reservadas',
+				recipientMail: `${mailBody.userData.email}; a.d.sanches@gmail.com`,
+				message,
+			}
+
+			console.log(body)
+
 			fetch('/api/mail', {
 				method: 'POST',
-				body: JSON.stringify(mailBody)
+				body: JSON.stringify(body)
 			})
 		}
 	};
