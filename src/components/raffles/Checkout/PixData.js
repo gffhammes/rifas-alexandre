@@ -2,7 +2,7 @@ import { QrCodePix } from 'qrcode-pix';
 
 export const pixData = {
   version: '01',
-  key: '+5511974224477',
+  key: '47948627000132',
   name: 'Alexandre Damasceno Sanches',
   city: 'SÃO PAULO',
 }
